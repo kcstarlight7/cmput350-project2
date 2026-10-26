@@ -45,6 +45,8 @@ struct Circle {
 struct Rect {
     Point2D topLeft;
     float width, height;
+
+    Rect(Point2D topLeft = {0, 0}, float width = 0, float height = 0) : topLeft(topLeft), width(width), height(height) {}
 };
 
 [[maybe_unused]] static std::ostream& operator<<(std::ostream& os, const Rect& r) {
