@@ -14,6 +14,9 @@ public:
     sf::Sound& GetSound(const std::string& soundName);
 
 private:
+    std::unordered_map<std::string, sf::SoundBuffer> mSoundBuffers;
+    std::unordered_map<std::string, size_t> mSounds;
+    std::vector<sf::Sound> mSoundInstances;
 };
 
 }  // namespace ECSEngine
