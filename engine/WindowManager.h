@@ -34,6 +34,9 @@ public:
 
 private:
     std::shared_ptr<sf::RenderWindow> mWindow;
+    sf::Vector2f mWindowSize;       // size of the window in screen pixels (i.e. window coords)
+    Point2D mViewCenterWorld;  // world coords point corresponding to the center of our window.
+    float mWorldUnitsPerPixel;      // distance in world coords covered by one pixel
 };
 
 }  // namespace ECSEngine
