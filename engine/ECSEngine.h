@@ -71,10 +71,22 @@ template <typename... Components>
 ECSEngine<Components...>::~ECSEngine() {}
 
 template <typename... Components>
-void ECSEngine<Components...>::Run() {}
+void ECSEngine<Components...>::Run() {
+    // repeats main game loop
+    // (runs systems from system manager, then draws window)
+    bool running = true;
+    while (running) {
+        if (!mSystemManager.Run(this)) {
+            running = false;
+        }
+        mWindowManager.GetWindow()->clear();
+        mWindowManager.GetWindow()->display();
+    }
+}
 
 template <typename... Components>
 bool ECSEngine<Components...>::ProcessEvents() {
+    // process events from sfml and updating input component
     return true;
 }
 
