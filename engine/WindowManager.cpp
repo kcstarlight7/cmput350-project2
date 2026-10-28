@@ -3,7 +3,10 @@
 namespace ECSEngine {
 
 WindowManager::WindowManager(unsigned int width, unsigned int height, const std::string& title)
-    : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), title)), mWindowSize(width, height) {}
+    : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), title)),
+      mWindowSize(width, height) {
+    mWindow->setFramerateLimit(30);
+}
 
 std::shared_ptr<sf::RenderWindow> WindowManager::GetWindow() const { return mWindow; }
 
