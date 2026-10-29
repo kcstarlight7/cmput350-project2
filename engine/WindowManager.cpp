@@ -73,24 +73,8 @@ void WindowManager::SetWorldScale(float worldUnitsPerPixel) {
 
 void WindowManager::SetWorldRect(const Rect& worldCameraRect) {}
 
-float WindowManager::WindowToWorld(float x) const { 
-    sf::Vector2f viewCenterWindow =
-        sf::Vector2f(mViewCenterWorld.x, mViewCenterWorld.y) / mWorldUnitsPerPixel;
-    sf::Vector2f originViewCenter = mWindowSize * 0.5f;
-    sf::Vector2f movementDiff = viewCenterWindow - originViewCenter;
+float WindowManager::WindowToWorld(float x) const { return x / mWorldUnitsPerPixel; }
 
-    float result = (x + movementDiff.x) * mWorldUnitsPerPixel;
-    return result; // assuming float x is just an x coordinate for now
-}
-
-float WindowManager::WorldToWindow(float x) const {
-    sf::Vector2f viewCenterWindow =
-        sf::Vector2f(mViewCenterWorld.x, mViewCenterWorld.y) / mWorldUnitsPerPixel;
-    sf::Vector2f originViewCenter = mWindowSize * 0.5f;
-    sf::Vector2f movementDiff = viewCenterWindow - originViewCenter;
-
-    float result = x / mWorldUnitsPerPixel - movementDiff.x;
-    return result; // assuming float x is just an x coordinate for now
-}
+float WindowManager::WorldToWindow(float x) const { return x * mWorldUnitsPerPixel; }
 
 }  // namespace ECSEngine
