@@ -74,8 +74,9 @@ template <typename... Components>
 void ECSEngine<Components...>::Run() {
     // repeats main game loop
     // (runs systems from system manager, then draws window)
-    bool running = true;
+    running = true;
     while (running) {
+        ProcessEvents();
         if (!mSystemManager.Run(this)) {
             running = false;
         }
@@ -87,6 +88,12 @@ void ECSEngine<Components...>::Run() {
 template <typename... Components>
 bool ECSEngine<Components...>::ProcessEvents() {
     // process events from sfml and updating input component
+    while (const std::optional event = mWindowManager.GetWindow()->pollEvent()) {
+        if (event->is<sf::Event::Closed>()) {
+            running = false;
+            mWindowManager.GetWindow()->close();
+        }
+    }
     return true;
 }
 
