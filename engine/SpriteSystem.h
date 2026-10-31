@@ -47,6 +47,8 @@ public:
                 windowManager.GetWindow()->draw(sprite);
             }
         }
+
+        return kContinue;
     }
 };
 
