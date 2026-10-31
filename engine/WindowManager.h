@@ -32,6 +32,8 @@ public:
     void DebugDrawRect(const Rect& r, int red, int green, int blue, int alpha = 255);
     void DebugFrameRect(const Rect& r, int red, int green, int blue, int alpha = 255);
 
+    int framesPerSecond = 30;
+
 private:
     std::shared_ptr<sf::RenderWindow> mWindow;
     sf::Vector2f mWindowSize;       // size of the window in screen pixels (i.e. window coords)
