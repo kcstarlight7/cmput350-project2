@@ -77,11 +77,11 @@ void ECSEngine<Components...>::Run() {
     // (runs systems from system manager, then draws window)
     running = true;
     while (running) {
+        mWindowManager.GetWindow()->clear();
         ProcessEvents();
         if (!mSystemManager.Run(this)) {
             running = false;
         }
-        mWindowManager.GetWindow()->clear();
         mWindowManager.GetWindow()->display();
     }
 }
