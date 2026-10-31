@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 #include "CameraComponent.h"
 #include "CollisionComponent.h"
@@ -93,8 +94,23 @@ bool ECSEngine<Components...>::ProcessEvents() {
             running = false;
             mWindowManager.GetWindow()->close();
         } else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-            auto& inputComponent = mEntityManager.GetComponentStorage<InputComponent>();
-        }
+            ComponentStorage<InputComponent> inputComponent = mEntityManager.GetComponentStorage<InputComponent>();
+            for (InputComponent i : inputComponent.mStorage) {
+                i.lastKeydown = i.keydown;
+                i.keydown.reset();
+                i.keydown.set((int) keyPressed->scancode);
+                std::cout << "code of key pressed: " << (int) keyPressed->scancode << "\n";
+            }
+        } /* else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>()) {
+            ComponentStorage<InputComponent> inputComponent =
+                mEntityManager.GetComponentStorage<InputComponent>();
+            for (InputComponent i : inputComponent.mStorage) {
+                i.lastKeydown = i.keydown;
+                i.keydown.reset();
+                i.keydown.set((int)keyReleased->scancode);
+                std::cout << "code of key released: " << (int)keyReleased->scancode << "\n";
+            }
+        }*/
     }
     return true;
 }
