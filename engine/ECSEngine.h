@@ -93,7 +93,7 @@ bool ECSEngine<Components...>::ProcessEvents() {
             running = false;
             mWindowManager.GetWindow()->close();
         } else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-            //auto& inputComponent = mEntityManager.GetComponentStorage<InputComponent>();
+            auto& inputComponent = mEntityManager.GetComponentStorage<InputComponent>();
         }
     }
     return true;

@@ -1,9 +1,18 @@
 #include "EntityManager.h"
 #include "ECSEngine.h"
+#include "InputComponent.h"
+#include "InputSystem.h"
+
+#define COMPONENTS                                                                             \
+    ECSEngine::InputComponent//, ECSEngine::MovementComponent, ECSEngine::CollisionComponent, \
+        ECSEngine::SpriteComponent, ECSEngine::SpawnComponent, ECSEngine::CameraComponent,     \
+        ECSEngine::CameraFollower, ECSEngine::LocationComponent, ECSEngine::GravityComponent,     \
+        ECSEngine::CameraShake, ECSEngine::ScoreComponent, ECSEngine::RespawnComponent
+using Engine = ECSEngine::ECSEngine<COMPONENTS>;
 
 int main(int argc, char* argv[]) { 
 
-    auto engine = ECSEngine::ECSEngine<>(1400, 800, "Testing");
+    auto engine = Engine(1400, 800, "Testing");
     auto& mSystemManager = engine.GetSystemManager();
     //mSystemManager.AddSystem(std::make_unique<CollisionLateSystem<Components...>>());
     //mSystemManager.AddSystem(std::make_unique<InputSystem<Components...>>());
