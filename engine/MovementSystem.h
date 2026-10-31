@@ -10,7 +10,22 @@ public:
         return name;
     }
 
-    tSystemReturn Run(EngineView<Components...>* engine) override { return kContinue; }
+    tSystemReturn Run(EngineView<Components...>* engine) override { 
+        auto entityManager = engine->GetEntityManager();
+        for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
+            // loops through all entities
+            auto currentID = iterator->GetID();
+            if (entityManager.HasComponent<MovementComponent>(currentID)) {
+                Point2D& velocity =
+                    entityManager.GetComponent<MovementComponent>(currentID).velocity;
+                Point2D& currentLoc = entityManager.GetComponent<LocationComponent>(currentID).loc;
+                int frames = engine->GetWindowManager().framesPerSecond;
+                currentLoc.x += (velocity.x / frames);
+                currentLoc.y += (velocity.y / frames);
+            }
+        }
+        return kContinue; 
+    }
 };
 
 }  // namespace ECSEngine
