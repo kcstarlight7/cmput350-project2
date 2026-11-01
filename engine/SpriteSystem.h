@@ -35,11 +35,11 @@ public:
                 sf::Sprite sprite(spriteManager.GetSprite(spriteData.textureID));
 
                 if (spriteData.worldSpace) {
-                    sprite.setPosition({ loc.x;  loc.y });
+                    sprite.setPosition({ loc.x,  loc.y });
                 } else {
                     Point2D screenLoc = windowManager.WorldToWindow(loc);
                     sprite.setPosition({
-                        screenLoc.x;
+                        screenLoc.x,
                         screenLoc.y
                     });
                 }

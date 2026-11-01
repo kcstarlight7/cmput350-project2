@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "LocationComponent.h"
+#include "CameraComponent.h"
 #include "MathUtil.h"
 #include "SpriteComponent.h"
 #include "SystemManager.h"
@@ -27,11 +28,13 @@ public:
             auto currentID = iterator->GetID();
             if (entityManager.HasComponent<CameraFollower>(currentID) && entityManager.HasComponent<LocationComponent>(currentID)) {
                 Point2D loc = entityManager.GetComponent<LocationComponent>(currentID).loc;
-                sf::Vector2f screenPos = windowManager.GetWindow()->getSize() * 0.5f;
+                sf::Vector2f screenPos = (sf::Vector2f)windowManager.GetWindow()->getSize() * 0.5f;
 
                 windowManager.SetCamera(loc, Point2D(screenPos.x, screenPos.y)); // implemented as center tracking camera for now
             }
         }
+
+        return kContinue;
     }
 };
 

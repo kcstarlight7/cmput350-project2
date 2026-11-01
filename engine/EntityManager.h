@@ -34,11 +34,12 @@ public:
         return id;
     }
 
+    template <typename... Components>
     void RemoveEntity(EntityID entity) { 
         if (!(entity < mEntityValid.size()) || !(mEntityValid[entity])) {
             return;
         }
-        (RemoveComponent<Components>(entity), ...);
+        (RemoveComponent<Components...>(entity));
         mEntityValid[entity] = false;
         mFreeEntities.push_back(entity);
     }
@@ -100,8 +101,8 @@ public:
     }
 
     template <typename T>
-    bool HasComponent(EntityID entity) const {
-        auto& storage = GetComponentStorage<T>();
+    bool HasComponent(EntityID entity) {
+        auto storage = GetComponentStorage<T>();
         std::array<bool, sizeof...(Components)> matches = {std::is_same_v<T, Components>...};
         size_t typeIndex = kNullComponent;
         for (size_t i = 0; i < matches.size(); i++) {

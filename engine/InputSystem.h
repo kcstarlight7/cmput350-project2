@@ -39,7 +39,7 @@ public:
                             Point2D currentVelocity =
                                 entityManager.GetComponent<MovementComponent>(currentID).velocity;
                             entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
-                                currentVelocity.x + 0.3((-kMaxRunVelocity) - currentVelocity.x);
+                                currentVelocity.x + 0.3 * ((-kMaxRunVelocity) - currentVelocity.x);
                             entityManager.GetComponent<GravityComponent>(currentID).disabledTimer =
                                 30;
                             return kContinue;
@@ -47,7 +47,7 @@ public:
                         Point2D currentVelocity = 
                             entityManager.GetComponent<MovementComponent>(currentID).velocity;
                         entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
-                            currentVelocity.x + 0.3((-kMaxRunVelocity)-currentVelocity.x);
+                            currentVelocity.x + 0.3 * ((-kMaxRunVelocity)-currentVelocity.x);
                     }
                 } else if (component.keydown[Key::Right]) {
                     //move right
@@ -57,7 +57,7 @@ public:
                             Point2D currentVelocity =
                                 entityManager.GetComponent<MovementComponent>(currentID).velocity;
                             entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
-                                currentVelocity.x + 0.3(kDashVelocity - currentVelocity.x);
+                                currentVelocity.x + 0.3 * (kDashVelocity - currentVelocity.x);
                             entityManager.GetComponent<GravityComponent>(currentID).disabledTimer =
                                 30;
                             return kContinue;
@@ -65,7 +65,7 @@ public:
                         Point2D currentVelocity =
                             entityManager.GetComponent<MovementComponent>(currentID).velocity;
                         entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
-                            currentVelocity.x + 0.3(kMaxRunVelocity - currentVelocity.x);
+                            currentVelocity.x + 0.3 * (kMaxRunVelocity - currentVelocity.x);
                         return kContinue;
                     }
                 } else if (component.keydown[Key::Z]) {
@@ -79,7 +79,7 @@ public:
                         Point2D currentVelocity =
                             entityManager.GetComponent<MovementComponent>(currentID).velocity;
                         entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
-                            currentVelocity.x + 0.3(kDashVelocity - currentVelocity.x);
+                            currentVelocity.x + 0.3 * (kDashVelocity - currentVelocity.x);
                         entityManager.GetComponent<GravityComponent>(currentID).disabledTimer = 30;
                         return kContinue;
                     }
