@@ -16,56 +16,69 @@ public:
         for (auto iterator1 = entityManager.cbegin(); iterator1 != entityManager.cend(); ++iterator1) {
             // loops through all entities
             auto currentID1 = iterator1->GetID();
-            if (entityManager.HasComponent<CollisionComponent>(currentID1)) { // able to collide
+            if (entityManager.HasComponent<CollisionComponent>(currentID1) &&
+                entityManager.HasComponent<LocationComponent>(currentID1)) {  // able to collide
                 for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
                      ++iterator2) {
                     auto currentID2 = iterator1->GetID();
                     if (entityManager.HasComponent<CollisionComponent>(currentID2) &&
+                        entityManager.HasComponent<LocationComponent>(currentID2) &&
                         currentID1 != currentID2) {  // able to collide and not self
                         // determine if collide on current frame:
                         CollisionComponent ent1 = entityManager.GetComponent<CollisionComponent>(currentID1);
+                        LocationComponent ent1Location =
+                            entityManager.GetComponent<LocationComponent>(currentID1);
                         CollisionComponent ent2 = entityManager.GetComponent<CollisionComponent>(currentID2);
+                        LocationComponent ent2Location =
+                            entityManager.GetComponent<LocationComponent>(currentID2);
 
-                        if (!ComputeCollision(ent1.collisionBox, ent2.collisionBox)) { // return if not collide
-                            return kContinue;
+                        Rect ent1CollisionBox = ent1.collisionBox;
+                        ent1CollisionBox.topLeft += ent1Location.loc;
+
+                        Rect ent2CollisionBox = ent2.collisionBox;
+                        ent2CollisionBox.topLeft += ent2Location.loc;
+
+                        if (!ComputeCollision(ent1CollisionBox,
+                                              ent2CollisionBox)) {  // return if not collide
+                            continue;
                         }
                         // Check for overlaps, mark in collision component (left/top/right/bottom)
-                        if (ent1.previousCollisionBox.topLeft.x < ent1.collisionBox.topLeft.x &&
-                            ent1.collisionBox.topLeft.x < ent2.collisionBox.topLeft.x) {
+                        if (ent1.previousCollisionBox.topLeft.x < ent1CollisionBox.topLeft.x &&
+                            ent1CollisionBox.topLeft.x < ent2.collisionBox.topLeft.x) {
                             ent1.onLeftWall = 1;
                         }
 
-                        if (ent1.previousCollisionBox.topLeft.y < ent1.collisionBox.topLeft.y &&
-                            ent1.collisionBox.topLeft.y < ent2.collisionBox.topLeft.y) {
+                        if (ent1.previousCollisionBox.topLeft.y < ent1CollisionBox.topLeft.y &&
+                            ent1CollisionBox.topLeft.y < ent2.collisionBox.topLeft.y) {
                             ent1.onCeiling = 1;
                         }
 
-                        if (ent1.previousCollisionBox.topLeft.x > ent1.collisionBox.topLeft.x &&
-                            ent1.collisionBox.topLeft.x > ent2.collisionBox.topLeft.x) {
+                        if (ent1.previousCollisionBox.topLeft.x > ent1CollisionBox.topLeft.x &&
+                            ent1CollisionBox.topLeft.x > ent2.collisionBox.topLeft.x) {
                             ent1.onRightWall = 1;
                         }
 
-                        if (ent1.previousCollisionBox.topLeft.y > ent1.collisionBox.topLeft.y &&
-                            ent1.collisionBox.topLeft.y > ent2.collisionBox.topLeft.y) {
+                        if (ent1.previousCollisionBox.topLeft.y > ent1CollisionBox.topLeft.y &&
+                            ent1CollisionBox.topLeft.y > ent2.collisionBox.topLeft.y) {
                             ent1.onGround = 1;
                         }
 
                         // Resolve based on relative location on the previous frame
                         // If we were above before, then resolve by [pushing up]
-                        if (ent1.previousCollisionBox.topLeft.y > ent1.collisionBox.topLeft.y) {
-                            ent1.collisionBox.topLeft.y = ent1.previousCollisionBox.topLeft.y;
+                        if (ent1.previousCollisionBox.topLeft.y > ent1CollisionBox.topLeft.y) {
+                            ent1Location.loc.y = ent1.previousCollisionBox.topLeft.y;
                         }
                         // If we were below before, then resolve by [pushing down]
-                        if (ent1.previousCollisionBox.topLeft.y < ent1.collisionBox.topLeft.y) {
-                            ent1.collisionBox.topLeft.y = ent1.previousCollisionBox.topLeft.y;
+                        if (ent1.previousCollisionBox.topLeft.y < ent1CollisionBox.topLeft.y) {
+                            ent1Location.loc.y = ent1.previousCollisionBox.topLeft.y;
                         }
                         // If we were to the left before, then resolve by [pushing right]
-                        if (ent1.previousCollisionBox.topLeft.x > ent1.collisionBox.topLeft.x) {
-                            ent1.collisionBox.topLeft.x = ent1.previousCollisionBox.topLeft.x;
+                        if (ent1.previousCollisionBox.topLeft.x > ent1CollisionBox.topLeft.x) {
+                            ent1Location.loc.x = ent1.previousCollisionBox.topLeft.x;
                         }
                         // If we were to the right before, then resolve by [pushing left]
-                        if (ent1.previousCollisionBox.topLeft.x < ent1.collisionBox.topLeft.x) {
-                            ent1.collisionBox.topLeft.x = ent1.previousCollisionBox.topLeft.x;
+                        if (ent1.previousCollisionBox.topLeft.x < ent1CollisionBox.topLeft.x) {
+                            ent1Location.loc.x = ent1.previousCollisionBox.topLeft.x;
                         }
                     }
                 }
