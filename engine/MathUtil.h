@@ -10,7 +10,7 @@ namespace ECSEngine {
 struct Point2D {
     float x, y;
     Point2D(float x = 0, float y = 0) : x(x), y(y) {}
-    Point2D(int x, int y) : x(x), y(y) {}
+    Point2D(int x, int y) : x((float)x), y((float)y) {}
 
     /**
      * @brief Calculates distance between points
@@ -18,7 +18,7 @@ struct Point2D {
      * @param other The other point
      * @return Distance
      */
-    double Distance(const Point2D& other) const {
+    float Distance(const Point2D& other) const {
         return std::sqrt((((other.x - x) * (other.x - x)) + ((other.y - y) * (other.y - y))));
     }
     /**
@@ -130,16 +130,12 @@ struct Point2D {
      *
      * @param scalar Scalar to divide with the point
      */
-    Point2D& operator/=(const int& scalar) {
+    Point2D& operator/=(const float& scalar) {
         this->x /= scalar;
         this->y /= scalar;
         return *this;
     }
-    // Below are unused functions
-    float operator*(const Point2D& other) const {
-        // TODO: write this code
-        return 0;
-    }
+
     float Dot(Point2D b) const { return (this->x * b.x) + (this->y * b.y); }
     static float Dot(Point2D a, Point2D b) { return (a.x * b.x) + (a.y * b.y); }
     static float Cross(Point2D a, Point2D b) {
@@ -320,6 +316,8 @@ struct Rect {
         this->height = temp_y - this->topLeft.y;
         return *this;
     }
+
+    /*
     Rect& operator+=(const Point2D& other) {
         // TODO: write this code
         return *this;
@@ -327,7 +325,7 @@ struct Rect {
     Rect operator+(const Point2D& other) const {
         // TODO: write this code
         return *this;
-    }
+    }*/
 
     /**
      * @brief Shrinks self by input on every side
@@ -360,66 +358,6 @@ struct Rect {
 [[maybe_unused]] static std::ostream& operator<<(std::ostream& os, const Rect& r) {
     os << "R{" << r.topLeft << ", " << r.width << "x" << r.height << "}";
     return os;
-}
-
-bool ComputeCollision(const Rect a, const Rect b, Point2D* crossPt) {
-    crossPt = nullptr;
-    return a.topLeft.x < b.topLeft.x + b.width && a.topLeft.x + a.width > b.topLeft.x &&
-           a.topLeft.y < b.topLeft.y + b.height && a.topLeft.y + a.height > b.topLeft.y;
-}
-
-bool ComputeCollision(const Rect a, const Circle b, Point2D* crossPt) {
-    crossPt = nullptr;
-    Line a1(a.topLeft, Point2D(a.topLeft.x + a.width, a.topLeft.y));
-    Line a2(a.topLeft, Point2D(a.topLeft.x, a.topLeft.y + a.height));
-    Line a3(Point2D(a.topLeft.x + a.width, a.topLeft.y),
-            Point2D(a.topLeft.x + a.width, a.topLeft.y + a.height));
-    Line a4(Point2D(a.topLeft.x, a.topLeft.y + a.height),
-            Point2D(a.topLeft.x + a.width, a.topLeft.y + a.height));
-
-    return a.IsInside(b.center) || ComputeCollision(b, a1, crossPt) || ComputeCollision(b, a2, crossPt) ||
-           ComputeCollision(b, a3, crossPt) || ComputeCollision(b, a4, crossPt);
-}
-
-bool ComputeCollision(const Rect a, const Line b, Point2D* crossPt) {
-    Point2D rectCenter(a.topLeft.x + (a.width / 2), a.topLeft.y + (a.height / 2));
-    // std::cout << rectCenter << "\n";
-    bool res = a.IsInside(b.ClosestPoint(rectCenter));
-    if (res) {
-        *crossPt = b.ClosestPoint(rectCenter);
-    }
-    return res;
-}
-
-bool ComputeCollision(const Circle a, const Circle b, Point2D* crossPt) {
-    crossPt = nullptr;
-    return std::pow(b.center.x - a.center.x, 2) + std::pow(b.center.y - a.center.y, 2) <=
-           std::pow(a.radius + b.radius, 2);
-}
-
-bool ComputeCollision(const Circle a, const Line b, Point2D* crossPt) {
-    Point2D closestPt = b.ClosestPoint(a.center);
-    if (crossPt != nullptr) {
-        crossPt->x = closestPt.x;
-        crossPt->y = closestPt.y;
-    }
-
-    return closestPt.Distance(a.center) < a.radius;
-}
-
-bool ComputeCollision(const Line a, const Line b, Point2D* crossPt) {
-    return a.Crosses(b, *crossPt);
-}
-
-bool ComputeCollision(const Circle a, const Rect b, Point2D* crossPt) {
-    crossPt = nullptr;
-    return ComputeCollision(b, a, crossPt);
-}
-bool ComputeCollision(const Line a, const Rect b, Point2D* crossPt) {
-    return ComputeCollision(b, a, crossPt);
-}
-bool ComputeCollision(const Line a, const Circle b, Point2D* crossPt) {
-    return ComputeCollision(b, a, crossPt);
 }
 
 }  // namespace ECSEngine
