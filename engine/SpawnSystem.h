@@ -10,7 +10,26 @@ public:
         return name;
     }
 
-    tSystemReturn Run(EngineView<Components...>* engine) override { return kContinue; }
+    tSystemReturn Run(EngineView<Components...>* engine) override { 
+        auto entityManager = engine->GetEntityManager();
+        for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
+            // loops through all entities
+            auto currentID = iterator->GetID();
+            if (entityManager.HasComponent<SpawnComponent>(currentID)) {
+                auto& currentComponent = entityManager.GetComponent<SpawnComponent>(currentID);
+                if (currentComponent.timeToNextSpawn > 0) {
+                    currentComponent.timeToNextSpawn--;
+                } else {
+                    if (currentComponent.totalSpawns > 0) {
+                        entityManager.CreateEntity(currentComponent.spawnType);
+                        currentComponent.timeToNextSpawn = currentComponent.timeBetweenSpawns;
+                    }
+                }
+       
+            }
+        }
+        return kContinue; 
+    }
 };
 
 }  // namespace ECSEngine

@@ -4,10 +4,10 @@
 #include "InputSystem.h"
 
 #define COMPONENTS                                                                             \
-    ECSEngine::InputComponent//, ECSEngine::MovementComponent, ECSEngine::CollisionComponent, \
-        ECSEngine::SpriteComponent, ECSEngine::SpawnComponent, ECSEngine::CameraComponent,     \
+    ECSEngine::InputComponent, ECSEngine::MovementComponent, ECSEngine::ScoreComponent, \
+        ECSEngine::SpawnComponent//, ECSEngine::SpriteComponent, ECSEngine::CameraComponent,     \
         ECSEngine::CameraFollower, ECSEngine::LocationComponent, ECSEngine::GravityComponent,     \
-        ECSEngine::CameraShake, ECSEngine::ScoreComponent, ECSEngine::RespawnComponent
+        ECSEngine::CameraShake, ECSEngine::CollisionComponent, ECSEngine::RespawnComponent
 using Engine = ECSEngine::ECSEngine<COMPONENTS>;
 
 int main(int argc, char* argv[]) { 

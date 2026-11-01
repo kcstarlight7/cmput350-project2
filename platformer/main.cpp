@@ -28,7 +28,61 @@ std::string gResourcePath = "../assets/";
         ECSEngine::CameraShake, ECSEngine::ScoreComponent, ECSEngine::RespawnComponent
 using Engine = ECSEngine::ECSEngine<COMPONENTS>;
 
-void LoadMap(Engine& engine, const std::string& path, const std::string& file) {}
+void LoadMap(Engine& engine, const std::string& path, const std::string& file) {
+    std::ifstream mapFile(path);
+    if (!mapFile.is_open()) {
+        return;
+    }
+    std::string line;
+    int dictionaryType;
+    bool spriteRead = false;
+    int currentLine = 0;
+    std::unordered_map<char, std::vector<std::string>> spriteDict;
+    while (std::getline(mapFile, line)) {
+        if (line.substr(0, 10) == "dictionary") {
+            if (line.substr(11, 1) == "1") {
+                dictionaryType = 1;
+            } else {
+                dictionaryType = 2;
+            }
+        } else if (line.substr(0, 3) == "map") {
+            spriteRead = true;
+            std::istringstream stream(line.substr(11, 10));
+            std::vector<std::string> coords;
+            std::string currentVar;
+            while (coords.size() < 2) {
+                stream >> currentVar;
+                coords.push_back(currentVar);
+            }
+            // ???
+        } else if (!spriteRead) {
+            std::istringstream stream(line);
+            std::vector<std::string> currentLine;
+            std::string currentVar;
+            while (stream >> currentVar) {
+                currentLine.push_back(currentVar);
+            }
+            while (currentLine.size() != 0) {
+                spriteDict.emplace(
+                    currentLine[0][0],
+                    std::vector<std::string>(currentLine.begin() + 1, currentLine.end()));
+
+            }
+        } else if (spriteRead) {
+            // load actual map
+            int currentChar = 0;
+            for (char sprite : line) {
+                if (spriteDict.contains(sprite)) {
+                    spriteDict[sprite]; // make things uwu
+                }
+                
+                currentChar++;
+                currentLine++;
+            }
+        }
+    }
+    mapFile.close();
+}
 
 int main(int argc, char* argv[]) {
     if (argc >= 3 && argv[1] == std::string("-path")) {
