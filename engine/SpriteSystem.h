@@ -21,7 +21,35 @@ public:
         return name;
     }
 
-    tSystemReturn Run(EngineView<Components...>* engine) override { return kContinue; }
+    tSystemReturn Run(EngineView<Components...>* engine) override { 
+        auto entityManager = engine->GetEntityManager();
+        auto windowManager = engine->GetWindowManager();
+        auto spriteManager = engine->GetSpriteManager();
+        for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
+            // loops through all entities
+            auto currentID = iterator->GetID();
+            if (entityManager.HasComponent<SpriteComponent>(currentID) && entityManager.HasComponent<LocationComponent>(currentID)) {
+                Point2D loc = entityManager.GetComponent<LocationComponent>(currentID).loc;
+                SpriteComponent spriteData = entityManager.GetComponent<SpriteComponent>(currentID);
+                
+                sf::Sprite sprite(spriteManager.GetSprite(spriteData.textureID));
+
+                if (spriteData.worldSpace) {
+                    sprite.setPosition({ loc.x;  loc.y });
+                } else {
+                    Point2D screenLoc = windowManager.WorldToWindow(loc);
+                    sprite.setPosition({
+                        screenLoc.x;
+                        screenLoc.y
+                    });
+                }
+                
+                windowManager.GetWindow()->draw(sprite);
+            }
+        }
+
+        return kContinue;
+    }
 };
 
 }  // namespace ECSEngine
