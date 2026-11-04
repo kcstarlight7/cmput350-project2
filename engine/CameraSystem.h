@@ -7,6 +7,8 @@
 #include "MathUtil.h"
 #include "SpriteComponent.h"
 #include "SystemManager.h"
+#include "WindowManager.h"
+#include "EntityManager.h"
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
@@ -21,8 +23,8 @@ public:
     }
 
     tSystemReturn Run(EngineView<Components...>* engine) override {
-        auto entityManager = engine->GetEntityManager();
-        auto windowManager = engine->GetWindowManager();
+        EntityManager<Components...>& entityManager = engine->GetEntityManager();
+        WindowManager& windowManager = engine->GetWindowManager();
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();

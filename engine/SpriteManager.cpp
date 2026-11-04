@@ -11,11 +11,11 @@ SpriteID SpriteManager::RegisterTexture(const std::string& texturePath, const Re
         }
     }
     
-    sf::Texture createdTexture(texturePath, false);
-    mTextures.insert({texturePath, createdTexture});
+    sf::Texture* createdTexture = new sf::Texture(texturePath, false);
+    mTextures.insert({texturePath, *createdTexture});
     SpriteID id = mSprites.size();
-    sf::Sprite createdSprite(createdTexture, sf::IntRect(sf::Vector2i(static_cast<int>(sourceRect.topLeft.x), static_cast<int>(sourceRect.topLeft.y)), sf::Vector2i(static_cast<int>(sourceRect.width), static_cast<int>(sourceRect.height))));
-    mSprites.push_back(sf::Sprite(createdTexture));
+    sf::Sprite createdSprite(*createdTexture, sf::IntRect(sf::Vector2i(static_cast<int>(sourceRect.topLeft.x), static_cast<int>(sourceRect.topLeft.y)), sf::Vector2i(static_cast<int>(sourceRect.width), static_cast<int>(sourceRect.height))));
+    mSprites.push_back(sf::Sprite(*createdTexture));
     return id;
 }
 
