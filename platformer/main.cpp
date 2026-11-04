@@ -49,6 +49,8 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
     float tileHeight = 0;
     int originX = 0;
     int originY = 0;
+    int mapGridHeight = 0;
+    int mapGridWidth = 0;
     while (std::getline(mapFile, line)) {
         if (line.substr(0, 10) == "dictionary") {
             if (line.substr(11, 1) == "1") {
@@ -64,27 +66,29 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
             while (stream >> currentVar) {
                 coords.push_back(currentVar);
             }
-            coords.pop_back();
-            coords.pop_back();
-            coords.pop_back();
-            tileHeight = std::stof(coords.back());
-            coords.pop_back();
-            tileWidth = std::stof(coords.back());
-            coords.pop_back();
-            coords.pop_back();
-            originY = std::stof(coords.back());
-            coords.pop_back();
-            originX = std::stof(coords.back());
+            mapGridHeight = std::stoi(coords.back());
+            coords.pop_back(); //size height
+            mapGridWidth = std::stoi(coords.back());
+            coords.pop_back(); //size width
+            coords.pop_back(); //"size"
+            tileHeight = std::stoi(coords.back());
+            coords.pop_back(); //pops tile height
+            tileWidth = std::stoi(coords.back());
+            coords.pop_back(); //pops tile width
+            coords.pop_back(); //"tile"
+            originY = std::stoi(coords.back()); 
+            coords.pop_back(); //pops map origin y
+            originX = std::stoi(coords.back());
         } else if (!spriteRead) {
             std::istringstream stream(line);
-            std::vector<std::string> currentLine;
+            std::vector<std::string> currentLineContent;
             std::string currentVar;
             while (stream >> currentVar) {
-                currentLine.push_back(currentVar);
+                currentLineContent.push_back(currentVar);
             }
             spriteDict.emplace(
-                currentLine[0][0],
-                std::vector<std::string>(currentLine.begin() + 1, currentLine.end()));
+                currentLineContent[0][0],
+                std::vector<std::string>(currentLineContent.begin() + 1, currentLineContent.end()));
         } else if (spriteRead) {
             // load actual map
             int currentChar = 0;
@@ -137,7 +141,7 @@ int main(int argc, char* argv[]) {
 
     // Load maps
     LoadMap(engine, gResourcePath, "sky.map");
-    LoadMap(engine, gResourcePath, "world.map");
+    //LoadMap(engine, gResourcePath, "world.map");
 
     // Place player
 
