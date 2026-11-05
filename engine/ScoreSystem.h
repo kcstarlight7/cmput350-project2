@@ -30,6 +30,7 @@ public:
                     auto& currentEntity = scoreComponent.digitID[2 - digitCount];
                     entityManager.GetComponent<SpriteComponent>(currentEntity).textureID =
                         scoreComponent.digitTextureID[digit];
+                    entityManager.GetComponent<SpriteComponent>(currentEntity).worldSpace = false;
                     score /= 10;
                     digitCount++;
                 }
@@ -39,6 +40,7 @@ public:
                     auto& currentEntity = scoreComponent.digitID[2 - digitCount];
                     entityManager.GetComponent<SpriteComponent>(currentEntity).textureID =
                         scoreComponent.digitTextureID[0];
+                    entityManager.GetComponent<SpriteComponent>(currentEntity).worldSpace = false;
                     digitCount++;
                 }
 

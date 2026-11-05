@@ -20,7 +20,8 @@
 #include "SpriteManager.h"
 #include "SpriteSystem.h"
 
-std::string gResourcePath = "../assets/";
+//std::string gResourcePath = "../assets/";
+std::string gResourcePath = "..\\..\\assets\\";
 #define COMPONENTS                                                                             \
     ECSEngine::LocationComponent, ECSEngine::MovementComponent, ECSEngine::CollisionComponent, \
         ECSEngine::SpriteComponent, ECSEngine::SpawnComponent, ECSEngine::CameraComponent,     \
@@ -29,8 +30,7 @@ std::string gResourcePath = "../assets/";
 using Engine = ECSEngine::ECSEngine<COMPONENTS>;
 
 static void LoadMap(Engine& engine, const std::string& path, const std::string& file) {
-    std::string folder = "..\\..\\assets\\";
-    std::filesystem::path fullPath = std::filesystem::path(folder) / file;
+    std::filesystem::path fullPath = std::filesystem::path(gResourcePath) / file;
     //std::string fullPath = path + file;
     //while (fullPath[0] == '.') {
         //fullPath.erase(0, 1);
@@ -55,7 +55,7 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
     int mapGridHeight = 0;
     int mapGridWidth = 0;
     while (std::getline(mapFile, line)) {
-        std::cout << "Current line: " << line << "\n";
+        //std::cout << "Current line: " << line << "\n";
         if (line.substr(0, 10) == "dictionary") {
             if (line.substr(11, 1) == "1") {
                 dictionaryType = 1;
@@ -63,7 +63,7 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                 dictionaryType = 2;
             }
 
-            std::cout << "Read: dictionary type: " << dictionaryType << "\n";
+            //std::cout << "Read: dictionary type: " << dictionaryType << "\n";
 
         } else if (line.substr(0, 3) == "map") {
             spriteRead = true;
@@ -87,13 +87,13 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
             coords.pop_back(); //pops map origin y
             originX = std::stoi(coords.back());
 
-            std::cout << "Read: map \n"
-                      << "map grid height: " << mapGridHeight << "\n"
-                      << "map grid width: " << mapGridWidth << "\n"
-                      << "tile height: " << tileHeight << "\n"
-                      << "tile width: " << tileWidth << "\n"
-                      << "originY: " << originY << "\n"
-                      << "originX: " << originX << "\n";
+            //std::cout << "Read: map \n"
+            //          << "map grid height: " << mapGridHeight << "\n"
+            //          << "map grid width: " << mapGridWidth << "\n"
+            //          << "tile height: " << tileHeight << "\n"
+            //          << "tile width: " << tileWidth << "\n"
+            //          << "originY: " << originY << "\n"
+            //          << "originX: " << originX << "\n";
         } else if (!spriteRead) {
             std::istringstream stream(line);
             std::vector<std::string> currentLineContent;
@@ -118,17 +118,17 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                     ECSEngine::Rect boundRect(ECSEngine::Point2D(std::stof(spriteDict[sprite][1]), std::stof(spriteDict[sprite][2])),
                          std::stof(spriteDict[sprite][3]),
                          std::stof(spriteDict[sprite][4]));
-                    std::cout << "Registered sprite texture.\n"
-                              << "path: " << folder + spriteDict[sprite][0] << "\n"
-                              << "tl: "
-                              << ECSEngine::Point2D(std::stof(spriteDict[sprite][1]),
-                                                    std::stof(spriteDict[sprite][2]))
-                              << "\n"
-                              << "width: " << std::stof(spriteDict[sprite][3]) << "\n"
-                              << "height: " << std::stof(spriteDict[sprite][4]) << "\n";
+                    //std::cout << "Registered sprite texture.\n"
+                    //          << "path: " << gResourcePath + spriteDict[sprite][0] << "\n"
+                    //          << "tl: "
+                    //          << ECSEngine::Point2D(std::stof(spriteDict[sprite][1]),
+                    //                                std::stof(spriteDict[sprite][2]))
+                    //          << "\n"
+                    //          << "width: " << std::stof(spriteDict[sprite][3]) << "\n"
+                    //          << "height: " << std::stof(spriteDict[sprite][4]) << "\n";
 
                     ECSEngine::SpriteID spriteid = engine.GetSpriteManager().RegisterTexture(
-                        folder + spriteDict[sprite][0], boundRect);
+                        gResourcePath + spriteDict[sprite][0], boundRect);
 
                     ECSEngine::SpriteComponent spriteComponent;
                     spriteComponent.textureID = spriteid;
@@ -138,8 +138,8 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                     engine.GetEntityManager().AddComponent<ECSEngine::SpriteComponent>(
                         id, spriteComponent);
 
-                    std::cout << "Location: " << location.loc.x << ", " << location.loc.y << "\n";
-                    std::cout << "cur char: " << currentChar << ", " << currentLine << "\n"; 
+                    //std::cout << "Location: " << location.loc.x << ", " << location.loc.y << "\n";
+                    //std::cout << "cur char: " << currentChar << ", " << currentLine << "\n"; 
                     engine.GetEntityManager().AddComponent<ECSEngine::LocationComponent>(id, location);
                     if (dictionaryType == 2) {
                         ECSEngine::CollisionComponent collision;
@@ -149,6 +149,16 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                         engine.GetEntityManager().AddComponent<ECSEngine::CollisionComponent>(
                             id, collision);
                     }
+
+                    //if (sprite == 'S') {
+                    //    ECSEngine::SpawnComponent spawn;
+                    //    spawn.entityID = id;
+                    //    spawn.spawnType = "Star";
+                    //    spawn.timeBetweenSpawns = 600;
+                    //    spawn.totalSpawns = 5;
+                    //    engine.GetEntityManager().AddComponent<ECSEngine::SpawnComponent>(id, spawn);
+                    //}
+
                 }
                 currentChar++;
             }
@@ -169,6 +179,13 @@ int main(int argc, char* argv[]) {
     Engine engine(1024, 768, "Test Engine: Platformer.exe");
 
     // Load sounds
+    engine.GetSoundManager().RegisterSound(gResourcePath + "error_008.ogg", "error");
+    engine.GetSoundManager().RegisterSound(gResourcePath + "footstep_grass_003.ogg", "grass_footstep");
+    engine.GetSoundManager().RegisterSound(gResourcePath + "footstep_snow_001.ogg", "snow_footstep");
+    engine.GetSoundManager().RegisterSound(gResourcePath + "laserLarge_000.ogg", "laser");
+    engine.GetSoundManager().RegisterSound(gResourcePath + "sfx_gem.ogg", "sfx_gem");
+    engine.GetSoundManager().RegisterSound(gResourcePath + "sfx_jump-high.ogg", "high_jump");
+    engine.GetSoundManager().RegisterSound(gResourcePath + "sfx_jump.ogg", "jump");
 
     // Load maps
     LoadMap(engine, gResourcePath, "sky.map");
@@ -177,6 +194,60 @@ int main(int argc, char* argv[]) {
     // Place player
 
     // Setup score component
+    ECSEngine::EntityID score1 = engine.GetEntityManager().CreateEntity("score_1");
+    ECSEngine::EntityID score2 = engine.GetEntityManager().CreateEntity("score_2");
+    ECSEngine::EntityID score3 = engine.GetEntityManager().CreateEntity("score_3");
+    ECSEngine::ScoreComponent scoreComp;
+    std::cout << "setting digitID" << "\n";
+    scoreComp.digitID[0] = score1;
+    scoreComp.digitID[1] = score2;
+    scoreComp.digitID[2] = score3;
+    std::cout << "registering texture" << "\n";
+    scoreComp.digitTextureID[9] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png", 
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64*4), 64, 64)); 
+    scoreComp.digitTextureID[8] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64*5), 64, 64)); 
+    scoreComp.digitTextureID[7] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64*6), 64, 64)); 
+    scoreComp.digitTextureID[6] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64*7), 64, 64)); 
+    scoreComp.digitTextureID[5] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64 * 8), 64, 64)); 
+    scoreComp.digitTextureID[4] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64 * 9), 64, 64)); 
+    scoreComp.digitTextureID[3] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64 * 10), 64, 64)); 
+    scoreComp.digitTextureID[2] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64 * 11), 64, 64)); 
+    scoreComp.digitTextureID[1] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64 * 12), 64, 64)); 
+    scoreComp.digitTextureID[0] = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-tiles-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(832, 64 * 13), 64, 64)); 
+    std::cout << "setting locations" << "\n";
+    scoreComp.score = 0;
+    ECSEngine::LocationComponent score1Loc;
+    score1Loc.loc = ECSEngine::Point2D(0, 0);
+    ECSEngine::LocationComponent score2Loc;
+    score2Loc.loc = ECSEngine::Point2D(70, 0);
+    ECSEngine::LocationComponent score3Loc;
+    score3Loc.loc = ECSEngine::Point2D(140, 0);
+    std::cout << "adding components" << "\n";
+    //engine.GetEntityManager().AddComponent(score1, scoreComp);
+    //engine.GetEntityManager().AddComponent(score2, scoreComp);
+    //engine.GetEntityManager().AddComponent(score3, scoreComp);
+    engine.GetEntityManager().AddComponent(score1, score1Loc);
+    engine.GetEntityManager().AddComponent(score2, score2Loc);
+    engine.GetEntityManager().AddComponent(score3, score3Loc);
 
     // Setup Camera
 
