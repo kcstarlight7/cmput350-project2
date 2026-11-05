@@ -12,6 +12,7 @@ public:
 
     tSystemReturn Run(EngineView<Components...>* engine) override { 
         auto entityManager = engine->GetEntityManager();
+        std::vector<std::string> spawns;
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
@@ -21,12 +22,15 @@ public:
                     currentComponent.timeToNextSpawn--;
                 } else {
                     if (currentComponent.totalSpawns > 0) {
-                        entityManager.CreateEntity(currentComponent.spawnType);
+                        spawns.push_back(currentComponent.spawnType);
                         currentComponent.timeToNextSpawn = currentComponent.timeBetweenSpawns;
                     }
                 }
-       
             }
+        }
+
+        for (std::string spawn : spawns) {
+            entityManager.CreateEntity(spawn);
         }
         return kContinue; 
     }

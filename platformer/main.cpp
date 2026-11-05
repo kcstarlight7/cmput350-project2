@@ -150,14 +150,15 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                             id, collision);
                     }
 
-                    //if (sprite == 'S') {
-                    //    ECSEngine::SpawnComponent spawn;
-                    //    spawn.entityID = id;
-                    //    spawn.spawnType = "Star";
-                    //    spawn.timeBetweenSpawns = 600;
-                    //    spawn.totalSpawns = 5;
-                    //    engine.GetEntityManager().AddComponent<ECSEngine::SpawnComponent>(id, spawn);
-                    //}
+                    if (sprite == 'S') {
+                        ECSEngine::SpawnComponent spawn;
+                        spawn.entityID = id;
+                        spawn.spawnType = "Star";
+                        spawn.timeBetweenSpawns = 600;
+                        spawn.timeToNextSpawn = 0;
+                        spawn.totalSpawns = 5;
+                        engine.GetEntityManager().AddComponent<ECSEngine::SpawnComponent>(id, spawn);
+                    }
 
                 }
                 currentChar++;
