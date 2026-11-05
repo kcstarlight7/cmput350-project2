@@ -29,15 +29,18 @@ std::string gResourcePath = "../assets/";
 using Engine = ECSEngine::ECSEngine<COMPONENTS>;
 
 static void LoadMap(Engine& engine, const std::string& path, const std::string& file) {
-    std::string folder = "..\\assets\\";
+    std::string folder = "..\\..\\assets\\";
     std::filesystem::path fullPath = std::filesystem::path(folder) / file;
     //std::string fullPath = path + file;
     //while (fullPath[0] == '.') {
         //fullPath.erase(0, 1);
     //}
     //fullPath.erase(0, 1);
+    std::cout << "Path: " << fullPath << "\n";
+    std::cout << "Current path: " << std::filesystem::current_path() << "\n";
     std::ifstream mapFile(fullPath);
     if (!mapFile.is_open()) {
+        std::cout << "Failed to open map!\n";
         return;
     }
     std::string line;
@@ -52,12 +55,16 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
     int mapGridHeight = 0;
     int mapGridWidth = 0;
     while (std::getline(mapFile, line)) {
+        std::cout << "Current line: " << line << "\n";
         if (line.substr(0, 10) == "dictionary") {
             if (line.substr(11, 1) == "1") {
                 dictionaryType = 1;
             } else {
                 dictionaryType = 2;
             }
+
+            std::cout << "Read: dictionary type: " << dictionaryType << "\n";
+
         } else if (line.substr(0, 3) == "map") {
             spriteRead = true;
             std::istringstream stream(line);
@@ -79,6 +86,14 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
             originY = std::stoi(coords.back()); 
             coords.pop_back(); //pops map origin y
             originX = std::stoi(coords.back());
+
+            std::cout << "Read: map \n"
+                      << "map grid height: " << mapGridHeight << "\n"
+                      << "map grid width: " << mapGridWidth << "\n"
+                      << "tile height: " << tileHeight << "\n"
+                      << "tile width: " << tileWidth << "\n"
+                      << "originY: " << originY << "\n"
+                      << "originX: " << originX << "\n";
         } else if (!spriteRead) {
             std::istringstream stream(line);
             std::vector<std::string> currentLineContent;
@@ -89,6 +104,8 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
             spriteDict.emplace(
                 currentLineContent[0][0],
                 std::vector<std::string>(currentLineContent.begin() + 1, currentLineContent.end()));
+
+
         } else if (spriteRead) {
             // load actual map
             int currentChar = 0;
@@ -100,6 +117,16 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                         ECSEngine::Rect(ECSEngine::Point2D(std::stof(spriteDict[sprite][1]), std::stof(spriteDict[sprite][2])),
                          std::stof(spriteDict[sprite][3]),
                          std::stof(spriteDict[sprite][4])));
+                    std::cout << "Registered sprite texture.\n"
+                              << "path: " << folder + spriteDict[sprite][0] << "\n"
+                              << "tl: "
+                              << ECSEngine::Point2D(std::stof(spriteDict[sprite][1]),
+                                                    std::stof(spriteDict[sprite][2]))
+                              << "\n"
+                              << "width: " << std::stof(spriteDict[sprite][3]) << "\n"
+                              << "height: " << std::stof(spriteDict[sprite][4]) << "\n";
+
+
                     ECSEngine::SpriteComponent spriteComponent;
                     spriteComponent.textureID = spriteid;
                     spriteComponent.bounds = {tileWidth, tileHeight};
@@ -109,6 +136,8 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                     ECSEngine::LocationComponent location;
                     location.loc = {originX + (tileWidth * currentChar),
                                     originY + (tileHeight * currentLine)};
+                    std::cout << "Location: " << location.loc.x << ", " << location.loc.y << "\n";
+                    std::cout << "cur char: " << currentChar << ", " << currentLine << "\n"; 
                     engine.GetEntityManager().AddComponent<ECSEngine::LocationComponent>(id, location);
                     if (dictionaryType == 2) {
                         ECSEngine::CollisionComponent collision;
