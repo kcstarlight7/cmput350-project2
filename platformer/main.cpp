@@ -131,6 +131,8 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                               << "width: " << std::stof(spriteDict[sprite][3]) << "\n"
                               << "height: " << std::stof(spriteDict[sprite][4]) << "\n";
 
+                    ECSEngine::SpriteID spriteid = engine.GetSpriteManager().RegisterTexture(
+                        folder + spriteDict[sprite][0], boundRect);
 
                     ECSEngine::SpriteComponent spriteComponent;
                     spriteComponent.textureID = spriteid;
