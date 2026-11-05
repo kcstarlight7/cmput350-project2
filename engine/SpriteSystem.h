@@ -35,18 +35,15 @@ public:
                 Point2D loc = entityManager.GetComponent<LocationComponent>(currentID).loc;
                 SpriteComponent spriteData = entityManager.GetComponent<SpriteComponent>(currentID);
                 
-                sf::Sprite sprite(spriteManager.GetSprite(spriteData.textureID));
+                sf::Sprite sprite = spriteManager.GetSprite(spriteData.textureID);
 
                 if (spriteData.worldSpace) {
-                    sprite.setPosition({ loc.x,  loc.y });
+                    sprite.setPosition({loc.x, loc.y});
                 } else {
+                    
                     Point2D screenLoc = windowManager.WorldToWindow(loc);
-                    sprite.setPosition({
-                        screenLoc.x,
-                        screenLoc.y
-                    });
+                    sprite.setPosition({screenLoc.x, screenLoc.y});
                 }
-                
                 windowManager.GetWindow()->draw(sprite);
             }
         }

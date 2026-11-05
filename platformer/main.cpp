@@ -94,21 +94,27 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
             int currentChar = 0;
             for (char sprite : line) {
                 if (spriteDict.contains(sprite)) {
+                    ECSEngine::LocationComponent location;
+                    location.loc = {originX + (tileWidth * currentChar),
+                                    originY + (tileHeight * currentLine)};
+                    if (location.loc.x < 0 || location.loc.y < 0) {
+                        currentChar++;
+                        continue;
+                    }
                     ECSEngine::EntityID id = engine.GetEntityManager().CreateEntity("MapPart");
+                    ECSEngine::Rect boundRect(ECSEngine::Point2D(std::stof(spriteDict[sprite][1]), std::stof(spriteDict[sprite][2])),
+                         std::stof(spriteDict[sprite][3]),
+                         std::stof(spriteDict[sprite][4]));
                     ECSEngine::SpriteID spriteid = engine.GetSpriteManager().RegisterTexture(
                         folder + spriteDict[sprite][0],
-                        ECSEngine::Rect(ECSEngine::Point2D(std::stof(spriteDict[sprite][1]), std::stof(spriteDict[sprite][2])),
-                         std::stof(spriteDict[sprite][3]),
-                         std::stof(spriteDict[sprite][4])));
+                        boundRect);
                     ECSEngine::SpriteComponent spriteComponent;
                     spriteComponent.textureID = spriteid;
                     spriteComponent.bounds = {tileWidth, tileHeight};
                     spriteComponent.worldSpace = true;
+                    
                     engine.GetEntityManager().AddComponent<ECSEngine::SpriteComponent>(
                         id, spriteComponent);
-                    ECSEngine::LocationComponent location;
-                    location.loc = {originX + (tileWidth * currentChar),
-                                    originY + (tileHeight * currentLine)};
                     engine.GetEntityManager().AddComponent<ECSEngine::LocationComponent>(id, location);
                     if (dictionaryType == 2) {
                         ECSEngine::CollisionComponent collision;
@@ -141,7 +147,7 @@ int main(int argc, char* argv[]) {
 
     // Load maps
     LoadMap(engine, gResourcePath, "sky.map");
-    //LoadMap(engine, gResourcePath, "world.map");
+    LoadMap(engine, gResourcePath, "world.map");
 
     // Place player
 
