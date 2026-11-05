@@ -18,6 +18,7 @@ public:
             if (entityManager.HasComponent<ScoreComponent>(currentID)) {
                 int score;
                 auto& scoreComponent = entityManager.GetComponent<ScoreComponent>(currentID);
+                
                 if (scoreComponent.score > 999) {
                     score = 999;
                 } else {
@@ -38,9 +39,14 @@ public:
                     // fill rest with 0 if score is less than 3 digits long
                     // assumes digitTextureID is filled from 0 to 9 instead of 1 to 9 then 0
                     auto& currentEntity = scoreComponent.digitID[2 - digitCount];
-                    entityManager.GetComponent<SpriteComponent>(currentEntity).textureID =
-                        scoreComponent.digitTextureID[0];
-                    entityManager.GetComponent<SpriteComponent>(currentEntity).worldSpace = false;
+                    if (entityManager.HasComponent<SpriteComponent>(currentEntity)) {
+                        auto spriteComp =
+                            entityManager.GetComponent<SpriteComponent>(currentEntity);
+                        spriteComp.textureID =
+                            scoreComponent.digitTextureID[0];
+                        spriteComp.worldSpace =
+                            false;
+                    }
                     digitCount++;
                 }
 

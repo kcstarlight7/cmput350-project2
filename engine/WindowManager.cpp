@@ -6,6 +6,9 @@ WindowManager::WindowManager(unsigned int width, unsigned int height, const std:
     : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), title)),
       mWindowSize(width, height) {
     mWindow->setFramerateLimit(framesPerSecond);
+    mWorldUnitsPerPixel = 1;
+    SetCamera(Point2D(mWindowSize.x / 2, mWindowSize.y / 2),
+              Point2D(mWindowSize.x / 2, mWindowSize.y / 2));
 }
 
 std::shared_ptr<sf::RenderWindow> WindowManager::GetWindow() const { return mWindow; }

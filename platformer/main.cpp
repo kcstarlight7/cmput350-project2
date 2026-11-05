@@ -233,6 +233,25 @@ int main(int argc, char* argv[]) {
     scoreComp.digitTextureID[0] = engine.GetSpriteManager().RegisterTexture(
         gResourcePath + "spritesheet-tiles-default.png",
         ECSEngine::Rect(ECSEngine::Point2D(832, 64 * 13), 64, 64)); 
+
+    ECSEngine::SpriteComponent scoreSpriteComp1;
+    scoreSpriteComp1.textureID = scoreComp.digitTextureID[0];
+    scoreSpriteComp1.bounds = {64, 64};
+    scoreSpriteComp1.worldSpace = false;
+    engine.GetEntityManager().AddComponent(score1, scoreSpriteComp1);
+
+    ECSEngine::SpriteComponent scoreSpriteComp2;
+    scoreSpriteComp2.textureID = scoreComp.digitTextureID[0];
+    scoreSpriteComp2.bounds = {64, 64};
+    scoreSpriteComp2.worldSpace = false;
+    engine.GetEntityManager().AddComponent(score2, scoreSpriteComp2);
+
+    ECSEngine::SpriteComponent scoreSpriteComp3;
+    scoreSpriteComp3.textureID = scoreComp.digitTextureID[0];
+    scoreSpriteComp3.bounds = {64, 64};
+    scoreSpriteComp3.worldSpace = false;
+    engine.GetEntityManager().AddComponent(score3, scoreSpriteComp3);
+
     std::cout << "setting locations" << "\n";
     scoreComp.score = 0;
     ECSEngine::LocationComponent score1Loc;
@@ -242,12 +261,14 @@ int main(int argc, char* argv[]) {
     ECSEngine::LocationComponent score3Loc;
     score3Loc.loc = ECSEngine::Point2D(140, 0);
     std::cout << "adding components" << "\n";
-    //engine.GetEntityManager().AddComponent(score1, scoreComp);
-    //engine.GetEntityManager().AddComponent(score2, scoreComp);
-    //engine.GetEntityManager().AddComponent(score3, scoreComp);
+
     engine.GetEntityManager().AddComponent(score1, score1Loc);
     engine.GetEntityManager().AddComponent(score2, score2Loc);
     engine.GetEntityManager().AddComponent(score3, score3Loc);
+
+    engine.GetEntityManager().AddComponent(score1, scoreComp);
+    engine.GetEntityManager().AddComponent(score2, scoreComp);
+    engine.GetEntityManager().AddComponent(score3, scoreComp);
 
     // Setup Camera
 
