@@ -58,10 +58,9 @@ Point2D WindowManager::WorldToWindow(const Point2D& pt) const {
 }
 
 void WindowManager::SetCamera(const Point2D& worldPt, const Point2D& screenPt) {
-    sf::Vector2f differenceWorld =
-        (sf::Vector2f(screenPt.x, screenPt.y) - (mWindowSize * 0.5f)) * mWorldUnitsPerPixel;
-
-    mViewCenterWorld = Point2D(worldPt.x - differenceWorld.x, worldPt.y - differenceWorld.y);
+    sf::Vector2f diff = mWindowSize * 0.5f * mWorldUnitsPerPixel;
+    mViewCenterWorld =
+        worldPt - screenPt * mWorldUnitsPerPixel + Point2D(diff.x, diff.y);
 }
 
 Point2D WindowManager::GetWorldCenter() const { return mViewCenterWorld; }
