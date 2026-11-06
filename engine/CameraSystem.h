@@ -31,20 +31,21 @@ public:
             if (entityManager.HasComponent<CameraComponent>(currentID)) {
                 CameraComponent camComp = entityManager.GetComponent<CameraComponent>(currentID);
 
-
-                // handles camera follower by tracking entity and updating camera component location
-                if (entityManager.HasComponent<CameraFollower>(currentID) &&
-                    entityManager.HasComponent<LocationComponent>(currentID)) {
-                    Point2D loc = entityManager.GetComponent<LocationComponent>(currentID).loc;
-
-                    camComp.position = loc; // center tracking for now
+                for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
+                     ++iterator) {
+                    auto currentID2 = iterator2->GetID();
+                    if (entityManager.HasComponent<CameraFollower>(currentID2)) {
+                        // set camera to currentID2
+                        camComp.position =
+                            entityManager.GetComponent<LocationComponent>(currentID2).loc;
+                    }
                 }
 
                 // set camera
                 sf::Vector2f screenPos = (sf::Vector2f)windowManager.GetWindow()->getSize() * 0.5f;
                 
-                windowManager.SetWorldScale(camComp.worldUnitsPerPixel);
-                windowManager.SetCamera(camComp.position, camComp.position);
+                //windowManager.SetWorldScale(camComp.worldUnitsPerPixel);
+                //windowManager.SetWorldCenter(camComp.position);
             }
         }
 
