@@ -11,9 +11,7 @@ void SoundManager::RegisterSound(const std::string& soundPath, const std::string
 
 sf::Sound& SoundManager::GetSound(const std::string& soundName) {
     auto soundLocation = mSounds.find(soundName);
-    if (soundLocation != mSounds.end()) {
-        return mSoundInstances[soundLocation->second];
-    } 
+    return mSoundInstances[soundLocation->second];
 }
 
 }  // namespace ECSEngine

@@ -2,6 +2,8 @@
 #define MATHUTIL_H
 
 #include <iostream>
+#include <cmath>
+#include <algorithm>
 
 namespace ECSEngine {
 
