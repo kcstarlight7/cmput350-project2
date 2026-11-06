@@ -25,27 +25,34 @@ public:
     tSystemReturn Run(EngineView<Components...>* engine) override {
         EntityManager<Components...>& entityManager = engine->GetEntityManager();
         WindowManager& windowManager = engine->GetWindowManager();
+
+        Point2D *camPos = nullptr;
+
+        for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend();
+             ++iterator) {
+            auto currentID = iterator->GetID();
+            if (entityManager.HasComponent<CameraFollower>(currentID)) {
+                // set camera to currentID2
+                camPos = &entityManager.GetComponent<LocationComponent>(currentID).loc;
+            }
+        }
+
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
             if (entityManager.HasComponent<CameraComponent>(currentID)) {
                 CameraComponent camComp = entityManager.GetComponent<CameraComponent>(currentID);
 
-                for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
-                     ++iterator2) {
-                    auto currentID2 = iterator2->GetID();
-                    if (entityManager.HasComponent<CameraFollower>(currentID2)) {
-                        // set camera to currentID2
-                        camComp.position =
-                            entityManager.GetComponent<LocationComponent>(currentID2).loc;
-                    }
+                if (camPos != nullptr) {
+                    camComp.position = *camPos;
                 }
 
                 // set camera
                 sf::Vector2f screenPos = (sf::Vector2f)windowManager.GetWindow()->getSize() * 0.5f;
                 
-                //windowManager.SetWorldScale(camComp.worldUnitsPerPixel);
-                //windowManager.SetWorldCenter(camComp.position);
+                windowManager.SetWorldScale(camComp.worldUnitsPerPixel);
+                windowManager.SetCamera(Point2D(camComp.position.x, 0.f), Point2D(screenPos.x, screenPos.y));
+                //windowManager.SetCamera()
             }
         }
 
