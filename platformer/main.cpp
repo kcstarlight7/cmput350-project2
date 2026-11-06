@@ -193,6 +193,55 @@ int main(int argc, char* argv[]) {
     LoadMap(engine, gResourcePath, "world.map");
 
     // Place player
+    ECSEngine::EntityID player = engine.GetEntityManager().CreateEntity("player");
+
+
+    // player comps
+    ECSEngine::SpriteComponent pSpriteComp;
+    pSpriteComp.textureID = engine.GetSpriteManager().RegisterTexture(
+        gResourcePath + "spritesheet-characters-default.png",
+        ECSEngine::Rect(ECSEngine::Point2D(128 * 0, 128 * 5), 128, 128));
+    pSpriteComp.bounds = {64, 64};
+    pSpriteComp.worldSpace = true;
+
+
+    ECSEngine::CollisionComponent pCollisionComp;
+    pCollisionComp.collisionBox = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 64, 64);
+
+    ECSEngine::CameraComponent pCameraComp;
+    sf::Vector2u windowSize = engine.GetWindowManager().GetWindow()->getSize();
+    float softExc = 0.3f;
+    float hardExc = 0.1f;
+    pCameraComp.softExclusion = ECSEngine::Rect(ECSEngine::Point2D(windowSize.x * softExc, 0.f),
+                                                windowSize.x * (softExc * 2), windowSize.y);
+    pCameraComp.hardExclusion = ECSEngine::Rect(ECSEngine::Point2D(windowSize.x * hardExc, 0.f),
+                                                windowSize.x * (hardExc * 2), windowSize.y);
+    pCameraComp.worldUnitsPerPixel = 1;
+    pCameraComp.speed = 1;
+    
+    ECSEngine::CameraFollower pCameraFollower;
+    pCameraFollower.entityID = player;
+
+    ECSEngine::InputComponent pInputComp(player);
+    ECSEngine::LocationComponent pLocationComp;
+    pLocationComp.loc = ECSEngine::Point2D(1024 * 0.7f, 768 * 0.5f);
+
+    ECSEngine::MovementComponent pMovementComp;
+    pMovementComp.velocity = 1;
+    ECSEngine::GravityComponent pGravityComp(ECSEngine::Point2D(1.0f, 1.0f));
+
+    engine.GetEntityManager().AddComponent(player, pLocationComp);
+    engine.GetEntityManager().AddComponent(player, pSpriteComp);
+    engine.GetEntityManager().AddComponent(player, pCollisionComp);
+
+    //engine.GetEntityManager().AddComponent(player, pCameraComp);
+    //engine.GetEntityManager().AddComponent(player, pCameraFollower); //dies
+    
+    engine.GetEntityManager().AddComponent(player, pGravityComp);
+    engine.GetEntityManager().AddComponent(player, pMovementComp);
+    engine.GetEntityManager().AddComponent(player, pInputComp);
+    
+
 
     // Setup score component
     ECSEngine::EntityID score1 = engine.GetEntityManager().CreateEntity("score_1");
@@ -258,9 +307,9 @@ int main(int argc, char* argv[]) {
     ECSEngine::LocationComponent score1Loc;
     score1Loc.loc = ECSEngine::Point2D(0, 0);
     ECSEngine::LocationComponent score2Loc;
-    score2Loc.loc = ECSEngine::Point2D(70, 0);
+    score2Loc.loc = ECSEngine::Point2D(50, 0);
     ECSEngine::LocationComponent score3Loc;
-    score3Loc.loc = ECSEngine::Point2D(140, 0);
+    score3Loc.loc = ECSEngine::Point2D(100, 0);
     std::cout << "adding components" << "\n";
 
     engine.GetEntityManager().AddComponent(score1, score1Loc);
@@ -272,6 +321,9 @@ int main(int argc, char* argv[]) {
     engine.GetEntityManager().AddComponent(score3, scoreComp);
 
     // Setup Camera
+    engine.GetWindowManager().SetCamera(
+        ECSEngine::Point2D((float)windowSize.x / 2, (float)windowSize.y / 2),
+        ECSEngine::Point2D((float)windowSize.x / 2, (float)windowSize.y / 2));
 
     // Add all systems
     auto& sm = engine.GetSystemManager();

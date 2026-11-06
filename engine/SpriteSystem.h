@@ -38,7 +38,8 @@ public:
                 sf::Sprite sprite = spriteManager.GetSprite(spriteData.textureID);
 
                 if (spriteData.worldSpace) {
-                    sprite.setPosition({loc.x, loc.y});
+                    sprite.setPosition({loc.x - windowManager.GetWorldCenter().x,
+                                        loc.y - windowManager.GetWorldCenter().y});
                 } else {
                     
                     Point2D screenLoc = windowManager.WorldToWindow(loc);
