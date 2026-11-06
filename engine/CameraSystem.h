@@ -32,7 +32,7 @@ public:
                 CameraComponent camComp = entityManager.GetComponent<CameraComponent>(currentID);
 
                 for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
-                     ++iterator) {
+                     ++iterator2) {
                     auto currentID2 = iterator2->GetID();
                     if (entityManager.HasComponent<CameraFollower>(currentID2)) {
                         // set camera to currentID2
