@@ -149,7 +149,7 @@ struct Point2D {
      */
     void Normalize() {
         float length = std::sqrt((this->x * this->x) + (this->y * this->y));
-        if (isnan(length) || length == 0) {
+        if (std::isnan(length) || length == 0) {
             return;
         }
         *this /= length;
@@ -187,7 +187,7 @@ struct Line {
         float point_x = (this->p2.x - this->p1.x) / Length();
         float point_y = (this->p2.y - this->p1.y) / Length();
         float p1p_length = ((p2 - p1).Dot(p - p1)) / Length();
-        Point2D temp = (point_x, point_y);
+        Point2D temp(point_x, point_y);
         Point2D x = p1 + (temp * p1p_length);
         return x;
     }
