@@ -3,27 +3,22 @@
 namespace ECSEngine {
 
 SpriteID SpriteManager::RegisterTexture(const std::string& texturePath, const Rect& sourceRect) {
+    sf::Texture* tex = nullptr;
     for (auto& value : mTextures) {
         if (value.first == texturePath) {
-            SpriteID id = mSprites.size();
-            sf::Sprite newSprite(value.second);
-            newSprite.setTextureRect(
-                sf::IntRect(sf::Vector2i(static_cast<int>(sourceRect.topLeft.x),
-                                         static_cast<int>(sourceRect.topLeft.y)),
-                            sf::Vector2i(static_cast<int>(sourceRect.width),
-                                         static_cast<int>(sourceRect.height))));
-
-            mSprites.push_back(newSprite);
-            return id;
+            tex = &value.second;
         }
     }
-    
-    sf::Texture* createdTexture = new sf::Texture(texturePath, false);
-    mTextures.insert({texturePath, *createdTexture});
+
+    if (tex == nullptr) {
+        tex = new sf::Texture(texturePath, false);
+        mTextures.insert({texturePath, *tex});
+    }
+
     SpriteID id = mSprites.size();
-    sf::Sprite createdSprite(*createdTexture);
-    createdSprite.setTextureRect(sf::IntRect(sf::Vector2i(static_cast<int>(sourceRect.topLeft.x), static_cast<int>(sourceRect.topLeft.y)), sf::Vector2i(static_cast<int>(sourceRect.width), static_cast<int>(sourceRect.height))));
-    mSprites.push_back(sf::Sprite(*createdTexture));
+    sf::Sprite sprite(*tex);
+    sprite.setTextureRect(sf::IntRect(sf::Vector2i(static_cast<int>(sourceRect.topLeft.x), static_cast<int>(sourceRect.topLeft.y)), sf::Vector2i(static_cast<int>(sourceRect.width), static_cast<int>(sourceRect.height))));
+    mSprites.push_back(sprite);
     return id;
 }
 
