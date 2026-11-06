@@ -234,8 +234,7 @@ int main(int argc, char* argv[]) {
     engine.GetEntityManager().AddComponent(player, pSpriteComp);
     engine.GetEntityManager().AddComponent(player, pCollisionComp);
 
-    //engine.GetEntityManager().AddComponent(player, pCameraComp);
-    //engine.GetEntityManager().AddComponent(player, pCameraFollower); //dies
+    engine.GetEntityManager().AddComponent(player, pCameraFollower); //dies
     
     engine.GetEntityManager().AddComponent(player, pGravityComp);
     engine.GetEntityManager().AddComponent(player, pMovementComp);
@@ -321,9 +320,11 @@ int main(int argc, char* argv[]) {
     engine.GetEntityManager().AddComponent(score3, scoreComp);
 
     // Setup Camera
-    engine.GetWindowManager().SetCamera(
-        ECSEngine::Point2D((float)windowSize.x / 2, (float)windowSize.y / 2),
-        ECSEngine::Point2D((float)windowSize.x / 2, (float)windowSize.y / 2));
+    ECSEngine::EntityID camera = engine.GetEntityManager().CreateEntity("Camera");
+    engine.GetEntityManager().AddComponent(camera, pCameraComp);
+    //engine.GetWindowManager().SetCamera(
+    //    ECSEngine::Point2D((float)windowSize.x / 2, (float)windowSize.y / 2),
+    //    ECSEngine::Point2D((float)windowSize.x / 2, (float)windowSize.y / 2));
 
     // Add all systems
     auto& sm = engine.GetSystemManager();
