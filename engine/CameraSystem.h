@@ -27,14 +27,20 @@ public:
         WindowManager& windowManager = engine->GetWindowManager();
 
         Point2D *camPos = nullptr;
+        SpriteComponent spriteComp;
 
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend();
              ++iterator) {
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<CameraFollower>(currentID)) {
+            if (entityManager.HasComponent<CameraFollower>(currentID) &&
+                entityManager.HasComponent<SpriteComponent>(currentID)) {
                 // set camera to currentID2
                 camPos = &entityManager.GetComponent<LocationComponent>(currentID).loc;
+
+                spriteComp =
+                    entityManager.GetComponent<SpriteComponent>(currentID);
             }
+
         }
 
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
@@ -45,13 +51,16 @@ public:
 
                 if (camPos != nullptr) {
                     camComp.position = *camPos;
+                    camComp.position += spriteComp.bounds.width;
                 }
 
                 // set camera
                 sf::Vector2f screenPos = (sf::Vector2f)windowManager.GetWindow()->getSize() * 0.5f;
                 
                 windowManager.SetWorldScale(camComp.worldUnitsPerPixel);
-                windowManager.SetCamera(Point2D(camComp.position.x, 0.f), Point2D(screenPos.x, screenPos.y));
+                windowManager.SetCamera(
+                    Point2D(camComp.position.x - screenPos.x * windowManager.GetWorldScale(), 0.f),
+                    Point2D(screenPos.x, screenPos.y));
                 //windowManager.SetCamera()
             }
         }

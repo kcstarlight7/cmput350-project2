@@ -212,7 +212,7 @@ int main(int argc, char* argv[]) {
     sf::Vector2u windowSize = engine.GetWindowManager().GetWindow()->getSize();
     float softExc = 0.3f;
     float hardExc = 0.1f;
-    pCameraComp.position = ECSEngine::Point2D(1024 * 0.5f, 768 * 0.5f);
+    pCameraComp.position = ECSEngine::Point2D(800, 0);
     pCameraComp.softExclusion = ECSEngine::Rect(ECSEngine::Point2D(windowSize.x * softExc, 0.f),
                                                 windowSize.x * (softExc * 2), windowSize.y);
     pCameraComp.hardExclusion = ECSEngine::Rect(ECSEngine::Point2D(windowSize.x * hardExc, 0.f),
