@@ -41,9 +41,7 @@ public:
                     sprite.setPosition({loc.x - windowManager.GetWorldCenter().x,
                                         loc.y - windowManager.GetWorldCenter().y});
                 } else {
-                    
-                    Point2D screenLoc = windowManager.WorldToWindow(loc);
-                    sprite.setPosition({screenLoc.x, screenLoc.y});
+                    sprite.setPosition({loc.x, loc.y});
                 }
                 windowManager.GetWindow()->draw(sprite);
             }
