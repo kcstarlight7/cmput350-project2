@@ -28,14 +28,14 @@ public:
             auto currentID = iterator->GetID();
             if (entityManager.template HasComponent<InputComponent>(currentID)) {
                 //if entity has input component
-                std::cout << "has input" << "\n";
+                //std::cout << "has input" << "\n";
                 InputComponent component = entityManager.template GetComponent<InputComponent>(currentID);
                 bool currentDisabled =
                     (entityManager.template GetComponent<GravityComponent>(currentID).disabledTimer == 0);
-                std::cout << component.keydown << "\n";
+                //std::cout << component.keydown << "\n";
                 if (component.keydown[Key::Left]) {
                     //move left
-                    std::cout << "left" << "\n";
+                    //std::cout << "left" << "\n";
                     if (entityManager.template HasComponent<MovementComponent>(currentID)) {
                         if (!currentDisabled && component.keydown[Key::C]) {
                             // dash while moving
@@ -59,7 +59,7 @@ public:
                     }
                 } else if (component.keydown[Key::Right]) {
                     //move right
-                    std::cout << "right" << "\n";
+                    //std::cout << "right" << "\n";
                     if (entityManager.template HasComponent<MovementComponent>(currentID)) {
                         if (!currentDisabled && component.keydown[Key::C]) {
                             // dash while moving
@@ -94,13 +94,13 @@ public:
                 
                 if (component.keydown[Key::Z]) {
                     //jump
-                    std::cout << "jump" << "\n";
+                    //std::cout << "jump" << "\n";
                     entityManager.template GetComponent<MovementComponent>(currentID).velocity.y =
                         kJumpVelocity;
                 } else if (component.keydown[Key::C]) {
                     //dash
                     //default dash forward?
-                    std::cout << "dash" << "\n";
+                    //std::cout << "dash" << "\n";
                     if (!currentDisabled &&
                         entityManager.template HasComponent<MovementComponent>(currentID)) {
                         Point2D currentVelocity =
