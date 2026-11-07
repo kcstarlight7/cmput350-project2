@@ -141,7 +141,7 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                     //std::cout << "Location: " << location.loc.x << ", " << location.loc.y << "\n";
                     //std::cout << "cur char: " << currentChar << ", " << currentLine << "\n"; 
                     engine.GetEntityManager().AddComponent<ECSEngine::LocationComponent>(id, location);
-                    if (dictionaryType == 2) {
+                    if (dictionaryType == 2 && sprite != 'S') {
                         ECSEngine::CollisionComponent collision;
                         collision.collisionBox = { ECSEngine::Point2D(std::stof(spriteDict[sprite][5]), std::stof(spriteDict[sprite][6])),
                                                   std::stof(spriteDict[sprite][7]), std::stof(spriteDict[sprite][8]) };
@@ -154,7 +154,7 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                         ECSEngine::SpawnComponent spawn;
                         spawn.entityID = id;
                         spawn.spawnType = "Star";
-                        spawn.timeBetweenSpawns = 600;
+                        spawn.timeBetweenSpawns = 60;
                         spawn.timeToNextSpawn = 0;
                         spawn.totalSpawns = 5;
                         engine.GetEntityManager().AddComponent<ECSEngine::SpawnComponent>(id, spawn);
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
 
     ECSEngine::MovementComponent pMovementComp;
     pMovementComp.velocity = ECSEngine::Point2D(0,0);
-    ECSEngine::GravityComponent pGravityComp(ECSEngine::Point2D(0.0f, -9.8f));
+    ECSEngine::GravityComponent pGravityComp(ECSEngine::Point2D(0.0f, 0.0f));
 
     engine.GetEntityManager().AddComponent(player, pLocationComp);
     engine.GetEntityManager().AddComponent(player, pSpriteComp);
