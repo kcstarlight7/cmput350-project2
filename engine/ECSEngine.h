@@ -94,8 +94,8 @@ bool ECSEngine<Components...>::ProcessEvents() {
             running = false;
             mWindowManager.GetWindow()->close();
         } else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-            ComponentStorage<InputComponent> inputComponent = mEntityManager.template GetComponentStorage<InputComponent>();
-            for (InputComponent i : inputComponent.mStorage) {
+            ComponentStorage<InputComponent>& inputComponent = mEntityManager.template GetComponentStorage<InputComponent>();
+            for (InputComponent& i : inputComponent.mStorage) {
                 i.lastKeydown = i.keydown;
                 i.keydown.reset();
                 i.keydown.set((int) keyPressed->scancode);
