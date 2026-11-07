@@ -201,12 +201,12 @@ int main(int argc, char* argv[]) {
     pSpriteComp.textureID = engine.GetSpriteManager().RegisterTexture(
         gResourcePath + "spritesheet-characters-default.png",
         ECSEngine::Rect(ECSEngine::Point2D(128 * 0, 128 * 5), 128, 128));
-    pSpriteComp.bounds = {64, 64};
+    pSpriteComp.bounds = {128, 128};
     pSpriteComp.worldSpace = true;
 
 
     ECSEngine::CollisionComponent pCollisionComp;
-    pCollisionComp.collisionBox = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 64, 64);
+    pCollisionComp.collisionBox = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 128, 128);
     pCollisionComp.onCeiling = 0;
     pCollisionComp.onGround = 0;
     pCollisionComp.onLeftWall = 0;
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
 
     ECSEngine::MovementComponent pMovementComp;
     pMovementComp.velocity = ECSEngine::Point2D(0,0);
-    ECSEngine::GravityComponent pGravityComp(ECSEngine::Point2D(0.0f, -9.8f));
+    ECSEngine::GravityComponent pGravityComp(ECSEngine::Point2D(0.0f, 0.f));
 
     engine.GetEntityManager().AddComponent(player, pLocationComp);
     engine.GetEntityManager().AddComponent(player, pSpriteComp);
