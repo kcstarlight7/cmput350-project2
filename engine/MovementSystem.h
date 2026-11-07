@@ -15,10 +15,11 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<MovementComponent>(currentID)) {
+            if (entityManager.template HasComponent<MovementComponent>(currentID)) {
                 Point2D& velocity =
-                    entityManager.GetComponent<MovementComponent>(currentID).velocity;
-                Point2D& currentLoc = entityManager.GetComponent<LocationComponent>(currentID).loc;
+                    entityManager.template GetComponent<MovementComponent>(currentID).velocity;
+                Point2D& currentLoc =
+                    entityManager.template GetComponent<LocationComponent>(currentID).loc;
                 int frames = engine->GetWindowManager().framesPerSecond;
                 currentLoc.x += (velocity.x / frames);
                 currentLoc.y += (velocity.y / frames);

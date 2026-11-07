@@ -15,8 +15,9 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<CollisionComponent>(currentID)) {
-                auto& currentComponent = entityManager.GetComponent<CollisionComponent>(currentID);
+            if (entityManager.template HasComponent<CollisionComponent>(currentID)) {
+                auto& currentComponent =
+                    entityManager.template GetComponent<CollisionComponent>(currentID);
                 currentComponent.previousCollisionBox = currentComponent.collisionBox;
             }
         }

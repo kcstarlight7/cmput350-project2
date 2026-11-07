@@ -26,61 +26,75 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             //loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<InputComponent>(currentID)) {
+            if (entityManager.template HasComponent<InputComponent>(currentID)) {
                 //if entity has input component
-                InputComponent component = entityManager.GetComponent<InputComponent>(currentID);
+                InputComponent component = entityManager.template GetComponent<InputComponent>(currentID);
                 bool currentDisabled =
-                    (entityManager.GetComponent<GravityComponent>(currentID).disabledTimer == 0);
+                    (entityManager.template GetComponent<GravityComponent>(currentID).disabledTimer == 0);
                 if (component.keydown[Key::Left]) {
                     //move left
-                    if (entityManager.HasComponent<MovementComponent>(currentID)) {
+                    if (entityManager.template HasComponent<MovementComponent>(currentID)) {
                         if (!currentDisabled && component.keydown[Key::C]) {
                             // dash while moving
                             Point2D currentVelocity =
-                                entityManager.GetComponent<MovementComponent>(currentID).velocity;
-                            entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
+                                entityManager.template GetComponent<MovementComponent>(currentID)
+                                    .velocity;
+                            entityManager.template GetComponent<MovementComponent>(currentID)
+                                .velocity.x =
                                 currentVelocity.x + 0.3 * ((-kMaxRunVelocity) - currentVelocity.x);
-                            entityManager.GetComponent<GravityComponent>(currentID).disabledTimer =
+                            entityManager.template GetComponent<GravityComponent>(currentID)
+                                .disabledTimer =
                                 30;
                             return kContinue;
                         }
                         Point2D currentVelocity = 
-                            entityManager.GetComponent<MovementComponent>(currentID).velocity;
-                        entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
+                            entityManager.template GetComponent<MovementComponent>(currentID)
+                                .velocity;
+                        entityManager.template GetComponent<MovementComponent>(currentID)
+                            .velocity.x =
                             currentVelocity.x + 0.3 * ((-kMaxRunVelocity)-currentVelocity.x);
                     }
                 } else if (component.keydown[Key::Right]) {
                     //move right
-                    if (entityManager.HasComponent<MovementComponent>(currentID)) {
+                    if (entityManager.template HasComponent<MovementComponent>(currentID)) {
                         if (!currentDisabled && component.keydown[Key::C]) {
                             // dash while moving
                             Point2D currentVelocity =
-                                entityManager.GetComponent<MovementComponent>(currentID).velocity;
-                            entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
+                                entityManager.template GetComponent<MovementComponent>(currentID)
+                                    .velocity;
+                            entityManager.template GetComponent<MovementComponent>(currentID)
+                                .velocity.x =
                                 currentVelocity.x + 0.3 * (kDashVelocity - currentVelocity.x);
-                            entityManager.GetComponent<GravityComponent>(currentID).disabledTimer =
+                            entityManager.template GetComponent<GravityComponent>(currentID)
+                                .disabledTimer =
                                 30;
                             return kContinue;
                         }
                         Point2D currentVelocity =
-                            entityManager.GetComponent<MovementComponent>(currentID).velocity;
-                        entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
+                            entityManager.template GetComponent<MovementComponent>(currentID)
+                                .velocity;
+                        entityManager.template GetComponent<MovementComponent>(currentID)
+                            .velocity.x =
                             currentVelocity.x + 0.3 * (kMaxRunVelocity - currentVelocity.x);
                         return kContinue;
                     }
                 } else if (component.keydown[Key::Z]) {
                     //jump
-                    entityManager.GetComponent<MovementComponent>(currentID).velocity.y =
+                    entityManager.template GetComponent<MovementComponent>(currentID).velocity.y =
                         kJumpVelocity;
                 } else if (component.keydown[Key::C]) {
                     //dash
                     //default dash forward?
-                    if (!currentDisabled && entityManager.HasComponent<MovementComponent>(currentID)) {
+                    if (!currentDisabled &&
+                        entityManager.template HasComponent<MovementComponent>(currentID)) {
                         Point2D currentVelocity =
-                            entityManager.GetComponent<MovementComponent>(currentID).velocity;
-                        entityManager.GetComponent<MovementComponent>(currentID).velocity.x =
+                            entityManager.template GetComponent<MovementComponent>(currentID)
+                                .velocity;
+                        entityManager.template GetComponent<MovementComponent>(currentID)
+                            .velocity.x =
                             currentVelocity.x + 0.3 * (kDashVelocity - currentVelocity.x);
-                        entityManager.GetComponent<GravityComponent>(currentID).disabledTimer = 30;
+                        entityManager.template GetComponent<GravityComponent>(currentID)
+                            .disabledTimer = 30;
                         return kContinue;
                     }
                 }

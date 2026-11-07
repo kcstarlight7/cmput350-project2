@@ -32,13 +32,12 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend();
              ++iterator) {
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<CameraFollower>(currentID) &&
-                entityManager.HasComponent<SpriteComponent>(currentID)) {
+            if (entityManager.template HasComponent<CameraFollower>(currentID) &&
+                entityManager.template HasComponent<SpriteComponent>(currentID)) {
                 // set camera to currentID2
-                camPos = &entityManager.GetComponent<LocationComponent>(currentID).loc;
+                camPos = &entityManager.template GetComponent<LocationComponent>(currentID).loc;
 
-                spriteComp =
-                    entityManager.GetComponent<SpriteComponent>(currentID);
+                spriteComp = entityManager.template GetComponent<SpriteComponent>(currentID);
             }
 
         }
@@ -46,8 +45,9 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<CameraComponent>(currentID)) {
-                CameraComponent camComp = entityManager.GetComponent<CameraComponent>(currentID);
+            if (entityManager.template HasComponent<CameraComponent>(currentID)) {
+                CameraComponent camComp =
+                    entityManager.template GetComponent<CameraComponent>(currentID);
 
                 if (camPos != nullptr) {
                     camComp.position = *camPos;

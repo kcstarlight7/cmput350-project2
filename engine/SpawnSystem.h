@@ -16,8 +16,9 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<SpawnComponent>(currentID)) {
-                auto& currentComponent = entityManager.GetComponent<SpawnComponent>(currentID);
+            if (entityManager.template HasComponent<SpawnComponent>(currentID)) {
+                auto& currentComponent =
+                    entityManager.template GetComponent<SpawnComponent>(currentID);
                 if (currentComponent.timeToNextSpawn > 0) {
                     currentComponent.timeToNextSpawn--;
                 } else {

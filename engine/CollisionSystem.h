@@ -18,21 +18,24 @@ public:
         for (auto iterator1 = entityManager.cbegin(); iterator1 != entityManager.cend(); ++iterator1) {
             // loops through all entities
             auto currentID1 = iterator1->GetID();
-            if (entityManager.HasComponent<CollisionComponent>(currentID1) &&
-                entityManager.HasComponent<LocationComponent>(currentID1)) {  // able to collide
+            if (entityManager.template HasComponent<CollisionComponent>(currentID1) &&
+                entityManager.template HasComponent<LocationComponent>(
+                    currentID1)) {  // able to collide
                 for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
                      ++iterator2) {
                     auto currentID2 = iterator1->GetID();
-                    if (entityManager.HasComponent<CollisionComponent>(currentID2) &&
-                        entityManager.HasComponent<LocationComponent>(currentID2) &&
+                    if (entityManager.template HasComponent<CollisionComponent>(currentID2) &&
+                        entityManager.template HasComponent<LocationComponent>(currentID2) &&
                         currentID1 != currentID2) {  // able to collide and not self
                         // determine if collide on current frame:
-                        CollisionComponent ent1 = entityManager.GetComponent<CollisionComponent>(currentID1);
+                        CollisionComponent ent1 =
+                            entityManager.template GetComponent<CollisionComponent>(currentID1);
                         LocationComponent ent1Location =
-                            entityManager.GetComponent<LocationComponent>(currentID1);
-                        CollisionComponent ent2 = entityManager.GetComponent<CollisionComponent>(currentID2);
+                            entityManager.template GetComponent<LocationComponent>(currentID1);
+                        CollisionComponent ent2 =
+                            entityManager.template GetComponent<CollisionComponent>(currentID2);
                         LocationComponent ent2Location =
-                            entityManager.GetComponent<LocationComponent>(currentID2);
+                            entityManager.template GetComponent<LocationComponent>(currentID2);
 
                         Rect ent1CollisionBox = ent1.collisionBox;
                         ent1CollisionBox.topLeft += ent1Location.loc;

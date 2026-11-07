@@ -31,9 +31,11 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<SpriteComponent>(currentID) && entityManager.HasComponent<LocationComponent>(currentID)) {
-                Point2D loc = entityManager.GetComponent<LocationComponent>(currentID).loc;
-                SpriteComponent spriteData = entityManager.GetComponent<SpriteComponent>(currentID);
+            if (entityManager.template HasComponent<SpriteComponent>(currentID) &&
+                entityManager.template HasComponent<LocationComponent>(currentID)) {
+                Point2D loc = entityManager.template GetComponent<LocationComponent>(currentID).loc;
+                SpriteComponent spriteData =
+                    entityManager.template GetComponent<SpriteComponent>(currentID);
                 
                 sf::Sprite sprite = spriteManager.GetSprite(spriteData.textureID);
 

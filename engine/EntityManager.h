@@ -34,7 +34,6 @@ public:
         return id;
     }
 
-    template <typename... Components>
     void RemoveEntity(EntityID entity) { 
         if (!(entity < mEntityValid.size()) || !(mEntityValid[entity])) {
             return;

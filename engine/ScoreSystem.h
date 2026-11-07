@@ -15,9 +15,10 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.HasComponent<ScoreComponent>(currentID)) {
+            if (entityManager.template HasComponent<ScoreComponent>(currentID)) {
                 int score;
-                auto& scoreComponent = entityManager.GetComponent<ScoreComponent>(currentID);
+                auto& scoreComponent =
+                    entityManager.template GetComponent<ScoreComponent>(currentID);
                 
                 if (scoreComponent.score > 999) {
                     score = 999;
@@ -29,9 +30,10 @@ public:
                     // from right to left (rev order)
                     int digit = score % 10;
                     auto& currentEntity = scoreComponent.digitID[2 - digitCount];
-                    entityManager.GetComponent<SpriteComponent>(currentEntity).textureID =
+                    entityManager.template GetComponent<SpriteComponent>(currentEntity).textureID =
                         scoreComponent.digitTextureID[digit];
-                    entityManager.GetComponent<SpriteComponent>(currentEntity).worldSpace = false;
+                    entityManager.template GetComponent<SpriteComponent>(currentEntity).worldSpace =
+                        false;
                     score /= 10;
                     digitCount++;
                 }
@@ -39,9 +41,9 @@ public:
                     // fill rest with 0 if score is less than 3 digits long
                     // assumes digitTextureID is filled from 0 to 9 instead of 1 to 9 then 0
                     auto& currentEntity = scoreComponent.digitID[2 - digitCount];
-                    if (entityManager.HasComponent<SpriteComponent>(currentEntity)) {
+                    if (entityManager.template HasComponent<SpriteComponent>(currentEntity)) {
                         auto spriteComp =
-                            entityManager.GetComponent<SpriteComponent>(currentEntity);
+                            entityManager.template GetComponent<SpriteComponent>(currentEntity);
                         spriteComp.textureID =
                             scoreComponent.digitTextureID[0];
                         spriteComp.worldSpace =
