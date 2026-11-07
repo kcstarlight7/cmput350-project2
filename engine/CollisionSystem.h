@@ -23,7 +23,7 @@ public:
                     currentID1)) {  // able to collide
                 for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
                      ++iterator2) {
-                    auto currentID2 = iterator1->GetID();
+                    auto currentID2 = iterator2->GetID();
                     if (entityManager.template HasComponent<CollisionComponent>(currentID2) &&
                         entityManager.template HasComponent<LocationComponent>(currentID2) &&
                         currentID1 != currentID2) {  // able to collide and not self
@@ -43,29 +43,38 @@ public:
                         Rect ent2CollisionBox = ent2.collisionBox;
                         ent2CollisionBox.topLeft += ent2Location.loc;
 
+                        /*
                         if (!ComputeCollision(ent1CollisionBox,
                                               ent2CollisionBox)) {  // return if not collide
                             continue;
-                        }
+                        }*/
                         // Check for overlaps, mark in collision component (left/top/right/bottom)
                         if (ent1.previousCollisionBox.topLeft.x < ent1CollisionBox.topLeft.x &&
                             ent1CollisionBox.topLeft.x < ent2.collisionBox.topLeft.x) {
                             ent1.onLeftWall = 1;
+                        } else {
+                            ent1.onLeftWall = 0;
                         }
 
                         if (ent1.previousCollisionBox.topLeft.y < ent1CollisionBox.topLeft.y &&
                             ent1CollisionBox.topLeft.y < ent2.collisionBox.topLeft.y) {
                             ent1.onCeiling = 1;
+                        } else {
+                            ent1.onCeiling = 0;
                         }
 
                         if (ent1.previousCollisionBox.topLeft.x > ent1CollisionBox.topLeft.x &&
                             ent1CollisionBox.topLeft.x > ent2.collisionBox.topLeft.x) {
                             ent1.onRightWall = 1;
+                        } else {
+                            ent1.onRightWall = 0;
                         }
 
                         if (ent1.previousCollisionBox.topLeft.y > ent1CollisionBox.topLeft.y &&
                             ent1CollisionBox.topLeft.y > ent2.collisionBox.topLeft.y) {
                             ent1.onGround = 1;
+                        } else {
+                            ent1.onGround = 0;
                         }
 
                         // Resolve based on relative location on the previous frame

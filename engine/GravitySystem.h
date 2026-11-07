@@ -18,36 +18,32 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.template HasComponent<GravityComponent>(currentID)) {
-                if (!entityManager.template GetComponent<GravityComponent>(currentID)
-                         .disabledTimer) {  // apply gravity
-                    if (entityManager.template HasComponent<CollisionComponent>(
-                            currentID)) {  // gravity respects collisions
-                        if (entityManager.template GetComponent<CollisionComponent>(currentID)
-                                .onGround) {  // does not fall if on ground
-                            entityManager.template GetComponent<GravityComponent>(currentID)
-                                .acceleration = {0.0f, 0.0f};
-                        } else if (!entityManager
-                                        .template GetComponent<CollisionComponent>(
-                                            currentID)  // case not on ground
-                                       .onGround) {
-                            entityManager.template GetComponent<GravityComponent>(currentID)
-                                .acceleration.y += kGravity;
-                        } else if (entityManager
-                                       .template GetComponent<CollisionComponent>(currentID)
-                                       .onLeftWall ||
-                                   entityManager
-                                       .template GetComponent<CollisionComponent>(currentID)
-                                       .onRightWall) {  // case wall jumping
-                            entityManager.template GetComponent<GravityComponent>(currentID)
-                                .acceleration.y += kGravityWall;
-                        }
-                    }
-                } else {  // tick down timer
-                    entityManager.template GetComponent<GravityComponent>(currentID)
-                        .disabledTimer -= 1;
+            if (entityManager.template HasComponent<GravityComponent>(currentID) &&
+                entityManager.template HasComponent<CollisionComponent>(currentID) &&
+                entityManager.template HasComponent<LocationComponent>(currentID)) {
+                GravityComponent& gravityComp =
+                    entityManager.template GetComponent<GravityComponent>(currentID);
+                if (gravityComp.disabledTimer) {
+                    gravityComp.disabledTimer -= 1;
+                    return kContinue;
                 }
-			}
+
+                CollisionComponent& collisionComp =
+                    entityManager.template GetComponent<CollisionComponent>(currentID);
+                LocationComponent& locationComp =
+                    entityManager.template GetComponent<LocationComponent>(currentID);
+
+                if (collisionComp.onGround) {  // does not fall if on ground
+                   gravityComp.acceleration = {0.0f, 0.0f};
+                } else {
+                    gravityComp.acceleration.y -= kGravity;
+                }
+                if (collisionComp.onLeftWall || collisionComp.onRightWall) {  // case wall jumping
+                    gravityComp.acceleration.y -= kGravityWall;
+                }
+
+                locationComp.loc += gravityComp.acceleration;
+            }
         }
 
         return kContinue;

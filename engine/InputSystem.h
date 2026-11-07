@@ -82,7 +82,17 @@ public:
                             currentVelocity.x + 0.8 * (kMaxRunVelocity - currentVelocity.x);
                         return kContinue;
                     }
-                } else if (component.keydown[Key::Z]) {
+                } else {
+                    if (entityManager.template HasComponent<MovementComponent>(currentID)) {
+                        Point2D currentVelocity =
+                            entityManager.template GetComponent<MovementComponent>(currentID)
+                                .velocity;
+                        entityManager.template GetComponent<MovementComponent>(currentID)
+                            .velocity.x = 0;
+                    }
+                }
+                
+                if (component.keydown[Key::Z]) {
                     //jump
                     std::cout << "jump" << "\n";
                     entityManager.template GetComponent<MovementComponent>(currentID).velocity.y =

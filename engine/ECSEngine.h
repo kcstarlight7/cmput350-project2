@@ -93,15 +93,24 @@ bool ECSEngine<Components...>::ProcessEvents() {
         if (event->is<sf::Event::Closed>()) {
             running = false;
             mWindowManager.GetWindow()->close();
-        } else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-            ComponentStorage<InputComponent>& inputComponent = mEntityManager.template GetComponentStorage<InputComponent>();
-            for (InputComponent& i : inputComponent.mStorage) {
-                i.lastKeydown = i.keydown;
-                i.keydown.reset();
-                i.keydown.set((int) keyPressed->scancode);
-                std::cout << "code of key pressed: " << (int) keyPressed->scancode << "\n";
-            }
-        } /* else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>()) {
+        } 
+
+        int keydown = 0;
+        
+        if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+            keydown = (int)keyPressed->scancode;
+        }
+
+        ComponentStorage<InputComponent>& inputComponent =
+            mEntityManager.template GetComponentStorage<InputComponent>();
+        for (InputComponent& i : inputComponent.mStorage) {
+            i.lastKeydown = i.keydown;
+            i.keydown.reset();
+            i.keydown.set(keydown);
+            //std::cout << "code of key pressed: " << (int)keyPressed->scancode << "\n";
+        }
+        
+        /* else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>()) {
             ComponentStorage<InputComponent> inputComponent =
                 mEntityManager.GetComponentStorage<InputComponent>();
             for (InputComponent i : inputComponent.mStorage) {
