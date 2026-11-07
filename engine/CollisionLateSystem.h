@@ -11,7 +11,7 @@ public:
     }
 
     tSystemReturn Run(EngineView<Components...>* engine) override { 
-        auto entityManager = engine->GetEntityManager();
+        auto& entityManager = engine->GetEntityManager();
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();

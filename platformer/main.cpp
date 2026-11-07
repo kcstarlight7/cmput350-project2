@@ -228,8 +228,8 @@ int main(int argc, char* argv[]) {
     pLocationComp.loc = ECSEngine::Point2D(1024 * 0.7f, 768 * 0.5f);
 
     ECSEngine::MovementComponent pMovementComp;
-    pMovementComp.velocity = 1;
-    ECSEngine::GravityComponent pGravityComp(ECSEngine::Point2D(1.0f, 1.0f));
+    pMovementComp.velocity = ECSEngine::Point2D(0,0);
+    ECSEngine::GravityComponent pGravityComp(ECSEngine::Point2D(0.0f, -9.8f));
 
     engine.GetEntityManager().AddComponent(player, pLocationComp);
     engine.GetEntityManager().AddComponent(player, pSpriteComp);
