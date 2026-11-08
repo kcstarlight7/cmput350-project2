@@ -6,7 +6,7 @@ void SoundManager::RegisterSound(const std::string& soundPath, const std::string
     sf::SoundBuffer buffer(soundPath);
     mSoundBuffers.insert( {soundName, buffer} );
     mSounds.insert({soundName, mSoundInstances.size()});
-    mSoundInstances.push_back(sf::Sound(buffer));
+    mSoundInstances.push_back(sf::Sound(mSoundBuffers[soundName]));
 }
 
 sf::Sound& SoundManager::GetSound(const std::string& soundName) {

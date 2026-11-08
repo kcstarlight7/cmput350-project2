@@ -112,6 +112,10 @@ public:
                                                                    curIDCollisionBox.width -
                                                                    otherIDCollisionBox.topLeft.x;
                                     }
+
+                                    if (curIDCollisionComp.onGround == 0) {
+                                        engine->GetSoundManager().GetSound("error").play();
+                                    }
                                 }
                                 
                                 if (curIDPrevCollisionBox.topLeft.x > curIDCollisionBox.topLeft.x) {
@@ -121,6 +125,10 @@ public:
                                         curIDLocationComp.loc.x -= curIDLocationComp.loc.x -
                                                                    (otherIDCollisionBox.topLeft.x +
                                                                     otherIDCollisionBox.width);
+                                    }
+                                    
+                                    if (curIDCollisionComp.onGround == 0) {
+                                        engine->GetSoundManager().GetSound("error").play();
                                     }
                                 }
                             }
@@ -138,7 +146,18 @@ public:
 
 
                            
-
+                            if (entityManager.GetEntityType(currentID) == "player" &&
+                                entityManager.GetEntityType(otherID) == "Star") {
+                                entityManager.template GetComponent<ScoreComponent>(currentID)
+                                    .score += 10;
+                                entityManager.RemoveEntity(otherID);
+                                engine->GetSoundManager().GetSound("sfx_gem").play();
+                            }
+                            if (entityManager.GetEntityType(currentID) == "player" &&
+                                entityManager.GetEntityType(otherID) == "Wall" &&
+                                curIDCollisionComp.onGround == 0) {
+                                engine->GetSoundManager().GetSound("error").play();
+                            }
                         }
 
                         // draw red rect
