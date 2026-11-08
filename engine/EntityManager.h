@@ -38,7 +38,7 @@ public:
         if (!(entity < mEntityValid.size()) || !(mEntityValid[entity])) {
             return;
         }
-        (RemoveComponent<Components...>(entity));
+        (RemoveComponent<Components>(entity), ...);
         mEntityValid[entity] = false;
         mFreeEntities.push_back(entity);
     }
