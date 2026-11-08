@@ -82,7 +82,7 @@ public:
                                 } 
                             }
                             
-                            if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height - 2 > otherIDCollisionBox.topLeft.y) { // if at level with other
+                            if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height > otherIDCollisionBox.topLeft.y + otherIDCollisionBox.height) { // if at level with other
                                 if (curIDPrevCollisionBox.topLeft.x <
                                          curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onRightWall = 1;
