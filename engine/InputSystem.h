@@ -6,7 +6,7 @@ namespace ECSEngine {
 
 const float kMaxRunVelocity = 15;
 const float kDashVelocity = 50;
-const float kJumpVelocity = 5;
+const float kJumpVelocity = 2;
 const float kGroundRunAcceleration = 5;
 const float kAirRunAcceleration = 4;
 const float kDashInterval = 25; 
@@ -91,17 +91,31 @@ public:
                             .velocity.x = 0;
                     }
                 }
-                if (inputComp.keydown[Key::Z]) {
+                if (inputComp.keydown[Key::Z] && inputComp.jumpDuration < 10) {
                     // jump
                     std::cout << "jump" << "\n";
                     inputComp.jumpDuration++;
-                    std::cout << inputComp.jumpDuration << "\n";
                     
-                    entityManager.template GetComponent<CollisionComponent>(currentID).onGround = 0;
-                    entityManager.template GetComponent<GravityComponent>(currentID)
-                        .acceleration.y = -(kJumpVelocity / inputComp.jumpDuration);
+                    std::cout << inputComp.jumpDuration << "\n";
+                    if (entityManager.template GetComponent<MovementComponent>(currentID)
+                            .jumpCount == 0) {
+                        entityManager.template GetComponent<MovementComponent>(currentID)
+                            .jumpCount++;
+                        entityManager.template GetComponent<CollisionComponent>(currentID)
+                            .onGround = 0;
+                        entityManager.template GetComponent<GravityComponent>(currentID)
+                            .acceleration.y = -(kJumpVelocity / inputComp.jumpDuration);
+                        if (entityManager
+                            .template GetComponent<LocationComponent>(currentID).loc.y >= engine->GetWindowManager().GetWindowBounds().height) {
+                            entityManager.template GetComponent<GravityComponent>(currentID)
+                                .acceleration.y = 0;
+                        }
+                    }
+                    
                 } else {
-                    if (inputComp.lastKeydown[Key::Z]) {
+                    if (inputComp.lastKeydown[Key::Z] &&
+                        entityManager.template GetComponent<MovementComponent>(currentID)
+                            .jumpCount == 1) {
                         entityManager.template GetComponent<GravityComponent>(currentID)
                             .acceleration.y = 0;
                         if (inputComp.jumpDuration >= 5) {
@@ -109,6 +123,8 @@ public:
                         } else {
                             engine->GetSoundManager().GetSound("jump").play();
                         }
+                        entityManager.template GetComponent<MovementComponent>(currentID)
+                            .jumpCount++;
                     }
                     inputComp.jumpDuration = 0;
                 }

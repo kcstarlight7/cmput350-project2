@@ -86,6 +86,8 @@ public:
 
                                 if (std::abs(otherBoxMidpt - curBoxMidpt) < otherIDCollisionBox.width * 0.8f) {
                                     curIDCollisionComp.onGround = 1;
+                                    entityManager.template GetComponent<MovementComponent>(currentID)
+                                        .jumpCount = 0;
 
                                     if (curIDPrevCollisionBox.topLeft.y <
                                         curIDCollisionBox.topLeft.y) {
@@ -103,6 +105,9 @@ public:
                                 if (curIDPrevCollisionBox.topLeft.x <
                                          curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onRightWall = 1;
+                                    entityManager
+                                        .template GetComponent<MovementComponent>(currentID)
+                                        .jumpCount = 0;
 
                                     if (otherIDCollisionComp.staticEntity) {
                                         curIDLocationComp.loc.x -= curIDLocationComp.loc.x +
@@ -113,6 +118,9 @@ public:
                                 
                                 if (curIDPrevCollisionBox.topLeft.x > curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onLeftWall = 1;
+                                    entityManager
+                                        .template GetComponent<MovementComponent>(currentID)
+                                        .jumpCount = 0;
 
                                     if (otherIDCollisionComp.staticEntity) {
                                         curIDLocationComp.loc.x -= curIDLocationComp.loc.x -
