@@ -16,6 +16,7 @@ struct InputComponent {
     int lastDash;
     std::bitset<sf::Keyboard::ScancodeCount> keydown;
     std::bitset<sf::Keyboard::ScancodeCount> lastKeydown;
+    int jumpDuration = 0;
 };
 
 }  // namespace ECSEngine

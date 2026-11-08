@@ -29,7 +29,7 @@ public:
             if (entityManager.template HasComponent<InputComponent>(currentID)) {
                 //if entity has input component
                 //std::cout << "has input" << "\n";
-                InputComponent inputComp = entityManager.template GetComponent<InputComponent>(currentID);
+                InputComponent& inputComp = entityManager.template GetComponent<InputComponent>(currentID);
                 bool currentDisabled =
                     (entityManager.template GetComponent<GravityComponent>(currentID).disabledTimer == 0);
                 //std::cout << inputComp.keydown.any() << "\n";
@@ -94,8 +94,20 @@ public:
                 if (inputComp.keydown[Key::Z]) {
                     // jump
                     std::cout << "jump" << "\n";
+                    inputComp.jumpDuration++;
+                    std::cout << inputComp.jumpDuration << "\n";
+                    
                     entityManager.template GetComponent<MovementComponent>(currentID).velocity.y =
                         kJumpVelocity;
+                } else {
+                    if (inputComp.lastKeydown[Key::Z]) {
+                        if (inputComp.jumpDuration >= 5) {
+                            engine->GetSoundManager().GetSound("high_jump").play();
+                        } else {
+                            engine->GetSoundManager().GetSound("jump").play();
+                        }
+                    }
+                    inputComp.jumpDuration = 0;
                 }
                 if (inputComp.keydown[Key::C]) {
                     // dash
