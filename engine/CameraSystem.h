@@ -58,9 +58,8 @@ public:
                 sf::Vector2f screenPos = (sf::Vector2f)windowManager.GetWindow()->getSize() * 0.5f;
                 
                 windowManager.SetWorldScale(camComp.worldUnitsPerPixel);
-                windowManager.SetCamera(
-                    Point2D(camComp.position.x - screenPos.x * windowManager.GetWorldScale(), 0.f),
-                    Point2D(screenPos.x, screenPos.y));
+                windowManager.SetCamera(Point2D(camComp.position.x, 0.f),
+                    Point2D(screenPos.x, 0.f));
                 //windowManager.SetCamera()
             }
         }

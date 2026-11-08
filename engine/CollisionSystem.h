@@ -23,6 +23,11 @@ public:
                     currentID)) {  // able to collide
                 CollisionComponent& curIDCollisionComp =
                     entityManager.template GetComponent<CollisionComponent>(currentID);
+
+                if (curIDCollisionComp.staticEntity) {
+                    continue;
+                }
+
                 curIDCollisionComp.onCeiling = 0;
                 curIDCollisionComp.onGround = 0;
                 curIDCollisionComp.onLeftWall = 0;
@@ -30,6 +35,12 @@ public:
 
                 LocationComponent& curIDLocationComp =
                     entityManager.template GetComponent<LocationComponent>(currentID);
+
+                Rect curIDCollisionBox = curIDCollisionComp.collisionBox;
+                curIDCollisionBox.topLeft += curIDLocationComp.loc;
+
+                std::cout << curIDCollisionBox.topLeft << "\n";
+
 
                 for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
                      ++iterator2) {
@@ -43,9 +54,6 @@ public:
                             entityManager.template GetComponent<CollisionComponent>(otherID);
                         LocationComponent& otherIDLocationComp =
                             entityManager.template GetComponent<LocationComponent>(otherID);
-
-                        Rect curIDCollisionBox = curIDCollisionComp.collisionBox;
-                        curIDCollisionBox.topLeft += curIDLocationComp.loc;
 
                         Rect otherIDCollisionBox = otherIDCollisionComp.collisionBox;
                         otherIDCollisionBox.topLeft += otherIDLocationComp.loc;
