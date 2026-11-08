@@ -78,7 +78,7 @@ public:
                             }
 
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height >
-                                  otherIDCollisionBox.topLeft.y) {
+                                  otherIDCollisionBox.topLeft.y && curIDCollisionBox.topLeft.y < otherIDCollisionBox.topLeft.y) {
                                 float curBoxMidpt =
                                     curIDCollisionBox.topLeft.x + curIDCollisionBox.width / 2;
                                 float otherBoxMidpt =
@@ -93,11 +93,24 @@ public:
                                             curIDLocationComp.loc.y -=
                                                 curIDLocationComp.loc.y +
                                                 curIDCollisionBox.height -
-                                                otherIDCollisionBox.topLeft.y - 1;
+                                                otherIDCollisionBox.topLeft.y;
                                         }
                                     } 
                                 }
                             }
+
+                            if (curIDCollisionBox.topLeft.y >
+                                otherIDCollisionBox.topLeft.y + otherIDCollisionBox.height * 0.8f) {
+                                float curBoxMidpt =
+                                    curIDCollisionBox.topLeft.x + curIDCollisionBox.width / 2;
+                                float otherBoxMidpt =
+                                    otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width / 2;
+
+                                if (std::abs(otherBoxMidpt - curBoxMidpt) <
+                                    otherIDCollisionBox.width) {
+                                    curIDCollisionComp.onCeiling = 1;
+                                }
+                            } else
                             
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height > otherIDCollisionBox.topLeft.y + otherIDCollisionBox.height) { // if at level with other
                                 if (curIDPrevCollisionBox.topLeft.x <
@@ -130,12 +143,6 @@ public:
                                 entityManager.RemoveEntity(otherID);
                                 engine->GetSoundManager().GetSound("sfx_gem").play();
                             }
-                            /* to be implemented when jump works
-                            if (curIDCollisionBox.topLeft.y <
-                                    otherIDCollisionBox.topLeft.y + otherIDCollisionBox.height &&
-                                !curIDCollisionComp.onCeiling) {
-                                // curIDCollisionComp.onCeiling = 1;
-                            }*/ 
                         }
 
                         // draw red rect
@@ -153,25 +160,6 @@ public:
                                      otherIDCollisionComp.collisionBox.height),
                                 0, 255, 255, 255);
                         }
-
-                        /*
-                        // Resolve based on relative location on the previous frame
-                        // If we were above before, then resolve by [pushing up]
-                        if (ent1.previousCollisionBox.topLeft.y > ent1CollisionBox.topLeft.y) {
-                            ent1Location.loc.y = ent1.previousCollisionBox.topLeft.y;
-                        }
-                        // If we were below before, then resolve by [pushing down]
-                        if (ent1.previousCollisionBox.topLeft.y < ent1CollisionBox.topLeft.y) {
-                            ent1Location.loc.y = ent1.previousCollisionBox.topLeft.y;
-                        }
-                        // If we were to the left before, then resolve by [pushing right]
-                        if (ent1.previousCollisionBox.topLeft.x > ent1CollisionBox.topLeft.x) {
-                            ent1Location.loc.x = ent1.previousCollisionBox.topLeft.x;
-                        }
-                        // If we were to the right before, then resolve by [pushing left]
-                        if (ent1.previousCollisionBox.topLeft.x < ent1CollisionBox.topLeft.x) {
-                            ent1Location.loc.x = ent1.previousCollisionBox.topLeft.x;
-                        }*/
                     }
                 }
 
