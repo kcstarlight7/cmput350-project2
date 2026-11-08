@@ -55,7 +55,7 @@ public:
 
                     std::cout << "player: " << windowManager.WorldToWindow(entityPtWorld) << "\n";
 
-                    if (!camComp.hardExclusion.IsInside(entityPtWindow)) {
+                    if (!(entityPtWindow.x > camComp.hardExclusion.topLeft.x && entityPtWindow.x < camComp.hardExclusion.topLeft.x + camComp.hardExclusion.width)) {
                         if (entityPtWindow.x > windowManager.GetWindowBounds().width / 2) {
                             camComp.position.x +=
                                 1 * (entityPtWindow.x - (camComp.hardExclusion.topLeft.x +
@@ -65,7 +65,7 @@ public:
                                 1 * (entityPtWindow.x - (camComp.hardExclusion.topLeft.x));
                         }
                     }
-                    if (!camComp.softExclusion.IsInside(entityPtWindow)) {
+                    if (!(entityPtWindow.x > camComp.softExclusion.topLeft.x && entityPtWindow.x < camComp.softExclusion.topLeft.x + camComp.softExclusion.width)) {
                         if (entityPtWindow.x > windowManager.GetWindowBounds().width / 2) {
                             camComp.position.x +=
                                 0.3 * (entityPtWindow.x - (camComp.softExclusion.topLeft.x +
