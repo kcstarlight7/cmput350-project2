@@ -69,29 +69,39 @@ public:
 
                         bool collide = ComputeCollision(curIDCollisionBox, otherIDCollisionBox);
                         if (collide) {
-                            if (curIDPrevCollisionBox.topLeft.y < curIDCollisionBox.topLeft.y) {
-                                curIDCollisionComp.onGround = 1;
+                            if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height >
+                                  otherIDCollisionBox.topLeft.y) {
+                                if (curIDPrevCollisionBox.topLeft.y < curIDCollisionBox.topLeft.y) {
+                                    curIDCollisionComp.onGround = 1;
 
-                                curIDLocationComp.loc.y -= curIDLocationComp.loc.y +
-                                                           curIDCollisionBox.height -
-                                                           otherIDCollisionBox.topLeft.y - 1;
-                            } 
+                                    if (otherIDCollisionComp.staticEntity) {
+                                        curIDLocationComp.loc.y -=
+                                            curIDLocationComp.loc.y + curIDCollisionBox.height -
+                                            otherIDCollisionBox.topLeft.y - 1;
+                                    }
+                                } 
+                            }
+                            
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height - 2 > otherIDCollisionBox.topLeft.y) { // if at level with other
                                 if (curIDPrevCollisionBox.topLeft.x <
                                          curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onRightWall = 1;
 
-                                    curIDLocationComp.loc.x -= curIDLocationComp.loc.x +
-                                                               curIDCollisionBox.width -
-                                                               otherIDCollisionBox.topLeft.x;
+                                    if (otherIDCollisionComp.staticEntity) {
+                                        curIDLocationComp.loc.x -= curIDLocationComp.loc.x +
+                                                                   curIDCollisionBox.width -
+                                                                   otherIDCollisionBox.topLeft.x;
+                                    }
                                 }
                                 
                                 if (curIDPrevCollisionBox.topLeft.x > curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onLeftWall = 1;
 
-                                    curIDLocationComp.loc.x -=
-                                        curIDLocationComp.loc.x -
-                                        (otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width);
+                                    if (otherIDCollisionComp.staticEntity) {
+                                        curIDLocationComp.loc.x -= curIDLocationComp.loc.x -
+                                                                   (otherIDCollisionBox.topLeft.x +
+                                                                    otherIDCollisionBox.width);
+                                    }
                                 }
                             }
                             
