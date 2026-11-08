@@ -114,7 +114,13 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                     ECSEngine::LocationComponent location;
                     location.loc = {originX + (tileWidth * currentChar),
                                     originY + (tileHeight * currentLine)};
-                    ECSEngine::EntityID id = engine.GetEntityManager().CreateEntity("MapPart");
+                    ECSEngine::EntityID id;
+                    if (sprite != '(' && sprite != 'T' && sprite != ')' && sprite != '[' &&
+                        sprite != ']' && sprite != 'X') {
+                        id = engine.GetEntityManager().CreateEntity("Wall");
+                    } else {
+                        id = engine.GetEntityManager().CreateEntity("MapPart");
+                    }
                     ECSEngine::Rect boundRect(ECSEngine::Point2D(std::stof(spriteDict[sprite][1]), std::stof(spriteDict[sprite][2])),
                          std::stof(spriteDict[sprite][3]),
                          std::stof(spriteDict[sprite][4]));
