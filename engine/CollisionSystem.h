@@ -114,7 +114,7 @@ public:
                                 if (curIDPrevCollisionBox.topLeft.x <
                                          curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onRightWall = 1;
-                                    //entityManager.template GetComponent<MovementComponent>(currentID).jumpCount = 0;
+                                    entityManager.template GetComponent<MovementComponent>(currentID).jumpCount = 0;
 
                                     if (otherIDCollisionComp.staticEntity) {
                                         curIDLocationComp.loc.x -= curIDLocationComp.loc.x +
@@ -125,7 +125,7 @@ public:
                                 
                                 if (curIDPrevCollisionBox.topLeft.x > curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onLeftWall = 1;
-                                    //entityManager.template GetComponent<MovementComponent>(currentID).jumpCount = 0;
+                                    entityManager.template GetComponent<MovementComponent>(currentID).jumpCount = 0;
 
                                     if (otherIDCollisionComp.staticEntity) {
                                         curIDLocationComp.loc.x -= curIDLocationComp.loc.x -
