@@ -15,10 +15,13 @@ public:
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
             // loops through all entities
             auto currentID = iterator->GetID();
-            if (entityManager.template HasComponent<CollisionComponent>(currentID)) {
-                auto& currentComponent =
+            if (entityManager.template HasComponent<CollisionComponent>(currentID) && entityManager.template HasComponent<LocationComponent>(currentID)) {
+                CollisionComponent& collisionComp =
                     entityManager.template GetComponent<CollisionComponent>(currentID);
-                currentComponent.previousCollisionBox = currentComponent.collisionBox;
+                LocationComponent& locationComp =
+                    entityManager.template GetComponent<LocationComponent>(currentID);
+                collisionComp.previousCollisionBox = collisionComp.collisionBox;
+                collisionComp.previousCollisionBox.topLeft = locationComp.loc;
             }
         }
         return kContinue; 

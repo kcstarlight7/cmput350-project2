@@ -6,6 +6,8 @@ WindowManager::WindowManager(unsigned int width, unsigned int height, const std:
     : mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), title)),
       mWindowSize(width, height) {
     mWindow->setFramerateLimit(framesPerSecond);
+    //todo disable key repeat and implement own
+    mWindow->setKeyRepeatEnabled(false);
     mWorldUnitsPerPixel = 1;
     //SetCamera(Point2D(mWindowSize.x / 2, mWindowSize.y / 2),
     //          Point2D(mWindowSize.x / 2, mWindowSize.y / 2));

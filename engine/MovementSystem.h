@@ -21,8 +21,7 @@ public:
                 Point2D& currentLoc =
                     entityManager.template GetComponent<LocationComponent>(currentID).loc;
                 int frames = engine->GetWindowManager().framesPerSecond;
-                currentLoc.x += (velocity.x);
-                currentLoc.y += (velocity.y);
+                currentLoc += velocity;
             }
         }
         return kContinue; 
