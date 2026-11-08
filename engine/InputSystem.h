@@ -6,7 +6,7 @@ namespace ECSEngine {
 
 const float kMaxRunVelocity = 15;
 const float kDashVelocity = 50;
-const float kJumpVelocity = 25;
+const float kJumpVelocity = 5;
 const float kGroundRunAcceleration = 5;
 const float kAirRunAcceleration = 4;
 const float kDashInterval = 25; 
@@ -97,10 +97,13 @@ public:
                     inputComp.jumpDuration++;
                     std::cout << inputComp.jumpDuration << "\n";
                     
-                    entityManager.template GetComponent<MovementComponent>(currentID).velocity.y =
-                        kJumpVelocity;
+                    entityManager.template GetComponent<CollisionComponent>(currentID).onGround = 0;
+                    entityManager.template GetComponent<GravityComponent>(currentID)
+                        .acceleration.y = -(kJumpVelocity / inputComp.jumpDuration);
                 } else {
                     if (inputComp.lastKeydown[Key::Z]) {
+                        entityManager.template GetComponent<GravityComponent>(currentID)
+                            .acceleration.y = 0;
                         if (inputComp.jumpDuration >= 5) {
                             engine->GetSoundManager().GetSound("high_jump").play();
                         } else {

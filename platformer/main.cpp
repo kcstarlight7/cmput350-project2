@@ -241,15 +241,17 @@ int main(int argc, char* argv[]) {
     pMovementComp.velocity = ECSEngine::Point2D(0,0);
     ECSEngine::GravityComponent pGravityComp(ECSEngine::Point2D(0.0f, 0.0f));
 
+    ECSEngine::RespawnComponent pRespawnComp;
+    pRespawnComp.loc = pLocationComp.loc;
+
     engine.GetEntityManager().AddComponent(player, pLocationComp);
     engine.GetEntityManager().AddComponent(player, pSpriteComp);
     engine.GetEntityManager().AddComponent(player, pCollisionComp);
-
-    engine.GetEntityManager().AddComponent(player, pCameraFollower); //dies
-    
+    engine.GetEntityManager().AddComponent(player, pCameraFollower);
     engine.GetEntityManager().AddComponent(player, pGravityComp);
     engine.GetEntityManager().AddComponent(player, pMovementComp);
     engine.GetEntityManager().AddComponent(player, pInputComp);
+    engine.GetEntityManager().AddComponent(player, pRespawnComp);
     
 
 
