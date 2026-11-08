@@ -20,6 +20,7 @@ struct LocationComponent {
 
 struct MovementComponent {
     Point2D velocity;  // Velocity in pixels per second
+    int jumpCount = 1;
 };
 
 struct GravityComponent {
