@@ -51,7 +51,7 @@ public:
 
                 if (camPos != nullptr) {
                     camComp.position = *camPos;
-                    camComp.position += spriteComp.bounds.width;
+                    camComp.position += spriteComp.bounds.width / 2;
                 }
 
                 // set camera
