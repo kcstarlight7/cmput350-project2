@@ -6,7 +6,7 @@ namespace ECSEngine {
 
 const float kMaxRunVelocity = 15;
 const float kDashVelocity = 50;
-const float kJumpVelocity = 2;
+const float kJumpVelocity = 1.5;
 const float kGroundRunAcceleration = 5;
 const float kAirRunAcceleration = 4;
 const float kDashInterval = 25; 
@@ -91,6 +91,9 @@ public:
                             .velocity.x = 0;
                     }
                 }
+
+                CollisionComponent& colliComp =
+                    entityManager.template GetComponent<CollisionComponent>(currentID);
                 if (inputComp.keydown[Key::Z] && inputComp.jumpDuration < 10) {
                     // jump
                     std::cout << "jump" << "\n";

@@ -30,7 +30,10 @@ public:
                 if (curIDCollisionComp.staticEntity) {
                     continue;
                 }
-
+                uint8_t soundTrigger = 0;
+                if (curIDCollisionComp.onGround == 0) {
+                    soundTrigger = 1;
+                }
                 curIDCollisionComp.onCeiling = 0;
                 curIDCollisionComp.onGround = 0;
                 curIDCollisionComp.onLeftWall = 0;
@@ -71,7 +74,6 @@ public:
 
                         bool collide = ComputeCollision(curIDCollisionBox, otherIDCollisionBox);
                         if (collide) {
-
                             if (entityManager.GetEntityType(currentID) == "player" && entityManager.GetEntityType(otherID) == "Star") {
                                 entityManager.template GetComponent<ScoreComponent>(currentID).score += 10;
                                 entityManager.RemoveEntity(otherID);
@@ -85,7 +87,14 @@ public:
                                     otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width / 2;
 
                                 if (std::abs(otherBoxMidpt - curBoxMidpt) < otherIDCollisionBox.width * 0.8f) {
+                                    
                                     curIDCollisionComp.onGround = 1;
+                                    if ((entityManager.template GetComponent<MovementComponent>(currentID).jumpCount > 0 
+                                        || soundTrigger) &&
+                                        entityManager.GetEntityType(currentID) == "player") {
+                                        engine->GetSoundManager().GetSound("snow_footstep").play();
+                                    }
+                                    
                                     entityManager.template GetComponent<MovementComponent>(currentID)
                                         .jumpCount = 0;
 
@@ -105,9 +114,7 @@ public:
                                 if (curIDPrevCollisionBox.topLeft.x <
                                          curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onRightWall = 1;
-                                    entityManager
-                                        .template GetComponent<MovementComponent>(currentID)
-                                        .jumpCount = 0;
+                                    //entityManager.template GetComponent<MovementComponent>(currentID).jumpCount = 0;
 
                                     if (otherIDCollisionComp.staticEntity) {
                                         curIDLocationComp.loc.x -= curIDLocationComp.loc.x +
@@ -118,9 +125,7 @@ public:
                                 
                                 if (curIDPrevCollisionBox.topLeft.x > curIDCollisionBox.topLeft.x) {
                                     curIDCollisionComp.onLeftWall = 1;
-                                    entityManager
-                                        .template GetComponent<MovementComponent>(currentID)
-                                        .jumpCount = 0;
+                                    //entityManager.template GetComponent<MovementComponent>(currentID).jumpCount = 0;
 
                                     if (otherIDCollisionComp.staticEntity) {
                                         curIDLocationComp.loc.x -= curIDLocationComp.loc.x -
@@ -128,6 +133,8 @@ public:
                                                                     otherIDCollisionBox.width);
                                     }
                                 }
+
+                                
                             }
                             
                             
