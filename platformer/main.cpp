@@ -320,9 +320,7 @@ int main(int argc, char* argv[]) {
     engine.GetEntityManager().AddComponent(score2, score2Loc);
     engine.GetEntityManager().AddComponent(score3, score3Loc);
 
-    engine.GetEntityManager().AddComponent(score1, scoreComp);
-    engine.GetEntityManager().AddComponent(score2, scoreComp);
-    engine.GetEntityManager().AddComponent(score3, scoreComp);
+    engine.GetEntityManager().AddComponent(player, scoreComp);
 
     // Setup Camera
     ECSEngine::EntityID camera = engine.GetEntityManager().CreateEntity("Camera");

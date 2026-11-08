@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EntityManager.h"
+#include "ScoreComponent.h"
 
 namespace ECSEngine {
 
@@ -69,6 +70,10 @@ public:
 
                         bool collide = ComputeCollision(curIDCollisionBox, otherIDCollisionBox);
                         if (collide) {
+                            if (entityManager.GetEntityType(currentID) == "player" && entityManager.GetEntityType(otherID) == "Star") {
+                                entityManager.template GetComponent<ScoreComponent>(currentID).score += 10;
+                                entityManager.RemoveEntity(otherID);
+                            }
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height >
                                   otherIDCollisionBox.topLeft.y) {
                                 if (curIDPrevCollisionBox.topLeft.y < curIDCollisionBox.topLeft.y) {
