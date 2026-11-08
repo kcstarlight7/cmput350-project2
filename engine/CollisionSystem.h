@@ -17,31 +17,38 @@ public:
 
         for (auto iterator1 = entityManager.cbegin(); iterator1 != entityManager.cend(); ++iterator1) {
             // loops through all entities
-            auto currentID1 = iterator1->GetID();
-            if (entityManager.template HasComponent<CollisionComponent>(currentID1) &&
+            auto currentID = iterator1->GetID();
+            if (entityManager.template HasComponent<CollisionComponent>(currentID) &&
                 entityManager.template HasComponent<LocationComponent>(
-                    currentID1)) {  // able to collide
+                    currentID)) {  // able to collide
+                CollisionComponent& curIDCollisionComp =
+                    entityManager.template GetComponent<CollisionComponent>(currentID);
+                curIDCollisionComp.onCeiling = 0;
+                curIDCollisionComp.onGround = 0;
+                curIDCollisionComp.onLeftWall = 0;
+                curIDCollisionComp.onRightWall = 0;
+
+                LocationComponent& curIDLocationComp =
+                    entityManager.template GetComponent<LocationComponent>(currentID);
+
                 for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
                      ++iterator2) {
-                    auto currentID2 = iterator2->GetID();
-                    if (entityManager.template HasComponent<CollisionComponent>(currentID2) &&
-                        entityManager.template HasComponent<LocationComponent>(currentID2) &&
-                        currentID1 != currentID2) {  // able to collide and not self
+                    auto otherID = iterator2->GetID();
+                    if (entityManager.template HasComponent<CollisionComponent>(otherID) &&
+                        entityManager.template HasComponent<LocationComponent>(otherID) &&
+                        currentID != otherID) {  // able to collide and not self
                         // determine if collide on current frame:
-                        CollisionComponent ent1 =
-                            entityManager.template GetComponent<CollisionComponent>(currentID1);
-                        LocationComponent ent1Location =
-                            entityManager.template GetComponent<LocationComponent>(currentID1);
-                        CollisionComponent ent2 =
-                            entityManager.template GetComponent<CollisionComponent>(currentID2);
-                        LocationComponent ent2Location =
-                            entityManager.template GetComponent<LocationComponent>(currentID2);
 
-                        Rect ent1CollisionBox = ent1.collisionBox;
-                        ent1CollisionBox.topLeft += ent1Location.loc;
+                        CollisionComponent& otherIDCollisionComp =
+                            entityManager.template GetComponent<CollisionComponent>(otherID);
+                        LocationComponent& otherIDLocationComp =
+                            entityManager.template GetComponent<LocationComponent>(otherID);
 
-                        Rect ent2CollisionBox = ent2.collisionBox;
-                        ent2CollisionBox.topLeft += ent2Location.loc;
+                        Rect curIDCollisionBox = curIDCollisionComp.collisionBox;
+                        curIDCollisionBox.topLeft += curIDLocationComp.loc;
+
+                        Rect otherIDCollisionBox = otherIDCollisionComp.collisionBox;
+                        otherIDCollisionBox.topLeft += otherIDLocationComp.loc;
 
                         /*
                         if (!ComputeCollision(ent1CollisionBox,
@@ -49,34 +56,31 @@ public:
                             continue;
                         }*/
                         // Check for overlaps, mark in collision component (left/top/right/bottom)
-                        if (ent1.previousCollisionBox.topLeft.x < ent1CollisionBox.topLeft.x &&
-                            ent1CollisionBox.topLeft.x < ent2.collisionBox.topLeft.x) {
-                            ent1.onLeftWall = 1;
-                        } else {
-                            ent1.onLeftWall = 0;
+
+                        bool collide = ComputeCollision(curIDCollisionBox, otherIDCollisionBox);
+                        if (collide) {
+                            if (curIDCollisionBox.topLeft.y > otherIDCollisionBox.topLeft.y &&
+                                !curIDCollisionComp.onGround) {
+                                curIDCollisionComp.onGround = 1;
+                            }
+
+                            if (curIDCollisionBox.topLeft.x < otherIDCollisionBox.topLeft.x &&
+                                !curIDCollisionComp.onLeftWall && !curIDCollisionComp.onGround) {
+                                curIDCollisionComp.onLeftWall = 1;
+                            }
+
+                            if (curIDCollisionBox.topLeft.y < otherIDCollisionBox.topLeft.y &&
+                                !curIDCollisionComp.onCeiling) {
+                                curIDCollisionComp.onCeiling = 1;
+                            }
+
+                            if (curIDCollisionBox.topLeft.x > otherIDCollisionBox.topLeft.x &&
+                                !curIDCollisionComp.onRightWall && !curIDCollisionComp.onGround) {
+                                curIDCollisionComp.onRightWall = 1;
+                            }
                         }
 
-                        if (ent1.previousCollisionBox.topLeft.y < ent1CollisionBox.topLeft.y &&
-                            ent1CollisionBox.topLeft.y < ent2.collisionBox.topLeft.y) {
-                            ent1.onCeiling = 1;
-                        } else {
-                            ent1.onCeiling = 0;
-                        }
-
-                        if (ent1.previousCollisionBox.topLeft.x > ent1CollisionBox.topLeft.x &&
-                            ent1CollisionBox.topLeft.x > ent2.collisionBox.topLeft.x) {
-                            ent1.onRightWall = 1;
-                        } else {
-                            ent1.onRightWall = 0;
-                        }
-
-                        if (ent1.previousCollisionBox.topLeft.y > ent1CollisionBox.topLeft.y &&
-                            ent1CollisionBox.topLeft.y > ent2.collisionBox.topLeft.y) {
-                            ent1.onGround = 1;
-                        } else {
-                            ent1.onGround = 0;
-                        }
-
+                        /*
                         // Resolve based on relative location on the previous frame
                         // If we were above before, then resolve by [pushing up]
                         if (ent1.previousCollisionBox.topLeft.y > ent1CollisionBox.topLeft.y) {
@@ -93,7 +97,7 @@ public:
                         // If we were to the right before, then resolve by [pushing left]
                         if (ent1.previousCollisionBox.topLeft.x < ent1CollisionBox.topLeft.x) {
                             ent1Location.loc.x = ent1.previousCollisionBox.topLeft.x;
-                        }
+                        }*/
                     }
                 }
             }
