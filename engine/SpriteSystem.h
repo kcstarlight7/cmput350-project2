@@ -41,10 +41,10 @@ public:
                 sf::Sprite sprite = spriteManager.GetSprite(spriteData.textureID);
 
                 if (spriteData.worldSpace) {
-                    sprite.setPosition({loc.x - windowManager.GetWorldCenter().x,
-                                        loc.y - windowManager.GetWorldCenter().y});
-                    drawingLoc = Point2D(loc.x - windowManager.GetWorldCenter().x,
-                                         loc.y - windowManager.GetWorldCenter().y);
+                    sprite.setPosition(
+                        {windowManager.WorldToWindow(loc).x, windowManager.WorldToWindow(loc).y});
+                    drawingLoc = {windowManager.WorldToWindow(loc).x,
+                                  windowManager.WorldToWindow(loc).y};
                 } else {
                     sprite.setPosition({loc.x, loc.y});
                     drawingLoc = Point2D(loc.x, loc.y);
