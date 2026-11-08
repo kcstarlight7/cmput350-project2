@@ -218,9 +218,9 @@ int main(int argc, char* argv[]) {
     float hardExc = 0.1f;
     pCameraComp.position = ECSEngine::Point2D(800, 0);
     pCameraComp.softExclusion = ECSEngine::Rect(ECSEngine::Point2D(windowSize.x * softExc, 0.f),
-                                                windowSize.x * (softExc * 2), windowSize.y);
+                                                windowSize.x * (1 - softExc * 2), windowSize.y);
     pCameraComp.hardExclusion = ECSEngine::Rect(ECSEngine::Point2D(windowSize.x * hardExc, 0.f),
-                                                windowSize.x * (hardExc * 2), windowSize.y);
+                                                windowSize.x * (1 - hardExc * 2), windowSize.y);
     pCameraComp.worldUnitsPerPixel = 1;
     pCameraComp.speed = 1;
     
