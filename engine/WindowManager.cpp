@@ -24,10 +24,14 @@ void WindowManager::DebugDrawRect(const Rect& r, int red, int green, int blue, i
 }
 
 void WindowManager::DebugFrameRect(const Rect& r, int red, int green, int blue, int alpha) {
+    std::cout << "called on r " << r.topLeft << " width " << r.width << " height " << r.height
+              << "\n";
     sf::RectangleShape drawingRect({r.width, r.height});
     drawingRect.setPosition({r.topLeft.x, r.topLeft.y});
     drawingRect.setOutlineThickness(5.f);
     drawingRect.setOutlineColor(sf::Color(red, green, blue, alpha));
+    drawingRect.setFillColor(sf::Color::Transparent);
+    mWindow->draw(drawingRect);
 }
 
 Rect WindowManager::WindowToWorld(const Rect& rect) const { 

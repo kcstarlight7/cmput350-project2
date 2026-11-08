@@ -46,6 +46,8 @@ public:
                     sprite.setPosition({loc.x, loc.y});
                 }
                 windowManager.GetWindow()->draw(sprite);
+                windowManager.DebugFrameRect(
+                    Rect(loc, sprite.getGlobalBounds().size.x, sprite.getGlobalBounds().size.y), 0, 0, 255);
             }
         }
 
