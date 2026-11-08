@@ -46,12 +46,37 @@ public:
             // loops through all entities
             auto currentID = iterator->GetID();
             if (entityManager.template HasComponent<CameraComponent>(currentID)) {
-                CameraComponent camComp =
+                CameraComponent& camComp =
                     entityManager.template GetComponent<CameraComponent>(currentID);
 
                 if (camPos != nullptr) {
-                    camComp.position = *camPos;
-                    camComp.position += spriteComp.bounds.width / 2;
+                    Point2D entityPtWorld = *camPos + spriteComp.bounds.width / 2;  // world
+                    Point2D entityPtWindow = windowManager.WorldToWindow(entityPtWorld);
+
+                    std::cout << "player: " << windowManager.WorldToWindow(entityPtWorld) << "\n";
+
+                    if (!camComp.hardExclusion.IsInside(entityPtWindow)) {
+                        if (entityPtWindow.x > windowManager.GetWindowBounds().width / 2) {
+                            camComp.position.x +=
+                                1 * (entityPtWindow.x - (camComp.hardExclusion.topLeft.x +
+                                                           camComp.hardExclusion.width));
+                        } else {
+                            camComp.position.x +=
+                                1 * (entityPtWindow.x - (camComp.hardExclusion.topLeft.x));
+                        }
+                    }
+                    if (!camComp.softExclusion.IsInside(entityPtWindow)) {
+                        if (entityPtWindow.x > windowManager.GetWindowBounds().width / 2) {
+                            camComp.position.x +=
+                                0.3 * (entityPtWindow.x - (camComp.softExclusion.topLeft.x +
+                                                           camComp.softExclusion.width));
+                        } else {
+                            camComp.position.x +=
+                                0.3 * (entityPtWindow.x - (camComp.softExclusion.topLeft.x));
+                        }
+                    }
+
+                    
                 }
 
                 // set camera
@@ -60,7 +85,8 @@ public:
                 windowManager.SetWorldScale(camComp.worldUnitsPerPixel);
                 windowManager.SetCamera(Point2D(camComp.position.x, 0.f),
                     Point2D(screenPos.x, 0.f));
-                //windowManager.SetCamera()
+                
+
             }
         }
 
