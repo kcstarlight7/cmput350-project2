@@ -2,8 +2,8 @@
 
 namespace ECSEngine {
 
-const float kGravity = -0.098f; // TODO: fine tune in testing
-const float kGravityWall = -0.5f; // TODO: ^
+const float kGravity = -0.05f; // TODO: fine tune in testing
+const float kGravityWall = kGravity / 2; // TODO: ^
 
 template <typename... Components>
 class GravitySystem : public System<Components...> {
@@ -33,6 +33,9 @@ public:
                 MovementComponent& movementComp =
                     entityManager.template GetComponent<MovementComponent>(currentID);
 
+                if (entityManager.GetEntityType(currentID) == "player") {
+                    std::cout << (collisionComp.onLeftWall == 1) << "\n";
+                }
                 if (collisionComp.onGround) {  // does not fall if on ground
                     gravityComp.acceleration = {0.0f, 0.0f};
                     movementComp.velocity.y = 0;
@@ -40,11 +43,16 @@ public:
                         movementComp.velocity.x = 0;
                     }
                 } else {
-                    gravityComp.acceleration.y -= kGravity;
+                    if (collisionComp.onLeftWall || collisionComp.onRightWall) {  // case wall jumping
+                        movementComp.velocity.y = 0;
+                        gravityComp.acceleration.y -= kGravityWall;
+                    } else {
+                        gravityComp.acceleration.y -= kGravity;
+                    }
                 }
-                if (collisionComp.onLeftWall || collisionComp.onRightWall) {  // case wall jumping
-                    gravityComp.acceleration.y -= kGravityWall;
-                }
+                
+
+                
 
                 movementComp.velocity += gravityComp.acceleration;
             }
