@@ -143,9 +143,26 @@ public:
                                 entityManager.RemoveEntity(otherID);
                                 engine->GetSoundManager().GetSound("sfx_gem").play();
                             }
+
+                            if (entityManager.GetEntityType(currentID) == "player") {
+                                CameraShake& camShakeComp =
+                                    entityManager.template GetComponent<CameraShake>(currentID);
+
+                                if ((std::abs(curIDCollisionBox.topLeft.y - curIDPrevCollisionBox.topLeft.y) > 10 &&
+                                        entityManager.GetEntityType(otherID) == "MapPart") ||
+                                    curIDCollisionComp.onCeiling) {
+                                    camShakeComp.frameLimit = 15;
+                                    camShakeComp.offset.y = 3.f;
+                                } else if (std::abs(curIDCollisionBox.topLeft.x - curIDPrevCollisionBox.topLeft.x) > 10 && 
+                                    entityManager.GetEntityType(otherID) == "Wall") {
+                                    camShakeComp.frameLimit = 15;
+                                    camShakeComp.offset.x = 3.f;
+                                }
+                            }
                         }
 
                         // draw red rect
+                        
                         if (collide) {
                             Point2D curIDDrawLoc =
                                 windowManager.WorldToWindow(curIDLocationComp.loc);
@@ -160,6 +177,8 @@ public:
                                      otherIDCollisionComp.collisionBox.height),
                                 0, 255, 255, 255);
                         }
+
+
                     }
                 }
 

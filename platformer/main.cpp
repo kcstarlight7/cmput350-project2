@@ -115,8 +115,7 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
                     location.loc = {originX + (tileWidth * currentChar),
                                     originY + (tileHeight * currentLine)};
                     ECSEngine::EntityID id;
-                    if (sprite != '(' && sprite != 'T' && sprite != ')' && sprite != '[' &&
-                        sprite != ']' && sprite != 'X') {
+                    if (sprite != 'T' && sprite != 'X') {
                         id = engine.GetEntityManager().CreateEntity("Wall");
                     } else {
                         id = engine.GetEntityManager().CreateEntity("MapPart");
@@ -331,8 +330,13 @@ int main(int argc, char* argv[]) {
     engine.GetEntityManager().AddComponent(player, scoreComp);
 
     // Setup Camera
+    ECSEngine::CameraShake camShakeComp;
+    camShakeComp.frameLimit = 0;
+    camShakeComp.offset = {0.0f, 0.0f};
+
     ECSEngine::EntityID camera = engine.GetEntityManager().CreateEntity("Camera");
     engine.GetEntityManager().AddComponent(camera, pCameraComp);
+    engine.GetEntityManager().AddComponent(player, camShakeComp);
     //engine.GetWindowManager().SetCamera(
     //    ECSEngine::Point2D((float)windowSize.x / 2, (float)windowSize.y / 2),
     //    ECSEngine::Point2D((float)windowSize.x / 2, (float)windowSize.y / 2));
