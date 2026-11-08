@@ -71,9 +71,9 @@ public:
                         if (collide) {
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height >
                                   otherIDCollisionBox.topLeft.y) {
-                                if (curIDPrevCollisionBox.topLeft.y < curIDCollisionBox.topLeft.y) {
-                                    curIDCollisionComp.onGround = 1;
+                                curIDCollisionComp.onGround = 1;
 
+                                if (curIDPrevCollisionBox.topLeft.y < curIDCollisionBox.topLeft.y) {
                                     if (otherIDCollisionComp.staticEntity) {
                                         curIDLocationComp.loc.y -=
                                             curIDLocationComp.loc.y + curIDCollisionBox.height -
