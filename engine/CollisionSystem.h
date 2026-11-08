@@ -41,7 +41,7 @@ public:
                 Rect curIDPrevCollisionBox = curIDCollisionComp.previousCollisionBox;
                 curIDCollisionBox.topLeft += curIDLocationComp.loc;
 
-                std::cout << curIDCollisionBox.topLeft << "\n";
+                //std::cout << curIDCollisionBox.topLeft << "\n";
 
 
                 for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
