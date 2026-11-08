@@ -348,8 +348,8 @@ struct Rect {
      * @return True/false depending if point is within self.
      */
     bool IsInside(const Point2D& p) const {
-        if (this->topLeft.x < p.x && p.x < this->topLeft.x + width && this->topLeft.y < p.y &&
-            p.y < this->topLeft.y + height) {
+        if ((this->topLeft.x < p.x) && (p.x < this->topLeft.x + this->width) && (this->topLeft.y < p.y) &&
+            (p.y < this->topLeft.y + this->height)) {
             return true;
         } else {
             return false;
