@@ -96,18 +96,24 @@ bool ECSEngine<Components...>::ProcessEvents() {
         } 
 
         int keydown = 0;
+        uint64_t pressed = 0;
         
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+            pressed = 1;
             keydown = (int)keyPressed->scancode;
         }
 
         ComponentStorage<InputComponent>& inputComponent =
             mEntityManager.template GetComponentStorage<InputComponent>();
         for (InputComponent& i : inputComponent.mStorage) {
-            i.lastKeydown = i.keydown;
-            i.keydown.reset();
-            i.keydown.set(keydown);
-            //std::cout << "code of key pressed: " << (int)keyPressed->scancode << "\n";
+            std::bitset<sf::Keyboard::ScancodeCount>& lastKey = i.lastKeydown;
+            std::bitset<sf::Keyboard::ScancodeCount>& keyD = i.keydown;
+            lastKey = keyD;
+            keyD.reset();
+            if (pressed) {
+                keyD.set(keydown);
+            }
+            std::cout << "code of key pressed: " << keydown << "\n";
         }
         
         /* else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>()) {
