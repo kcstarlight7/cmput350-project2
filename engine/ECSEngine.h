@@ -89,44 +89,37 @@ void ECSEngine<Components...>::Run() {
 template <typename... Components>
 bool ECSEngine<Components...>::ProcessEvents() {
     // process events from sfml and updating input component
+
+    int keydown = -1;
+
     while (const std::optional event = mWindowManager.GetWindow()->pollEvent()) {
         if (event->is<sf::Event::Closed>()) {
             running = false;
             mWindowManager.GetWindow()->close();
         } 
 
-        int keydown = 0;
-        uint64_t pressed = 0;
         
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-            pressed = 1;
             keydown = (int)keyPressed->scancode;
         }
-
-        ComponentStorage<InputComponent>& inputComponent =
-            mEntityManager.template GetComponentStorage<InputComponent>();
-        for (InputComponent& i : inputComponent.mStorage) {
-            std::bitset<sf::Keyboard::ScancodeCount>& lastKey = i.lastKeydown;
-            std::bitset<sf::Keyboard::ScancodeCount>& keyD = i.keydown;
-            lastKey = keyD;
-            keyD.reset();
-            if (pressed) {
-                keyD.set(keydown);
-            }
-            std::cout << "code of key pressed: " << keydown << "\n";
-        }
-        
-        /* else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>()) {
-            ComponentStorage<InputComponent> inputComponent =
-                mEntityManager.GetComponentStorage<InputComponent>();
-            for (InputComponent i : inputComponent.mStorage) {
-                i.lastKeydown = i.keydown;
-                i.keydown.reset();
-                i.keydown.set((int)keyReleased->scancode);
-                std::cout << "code of key released: " << (int)keyReleased->scancode << "\n";
-            }
-        }*/
     }
+
+    auto& entityManager = GetEntityManager();
+    for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
+        // loops through all entities
+        auto currentID = iterator->GetID();
+        if (entityManager.template HasComponent<InputComponent>(currentID)) {
+            InputComponent& inpComp =
+                entityManager.template GetComponent<InputComponent>(currentID);
+
+            inpComp.lastKeydown = inpComp.keydown;
+            inpComp.keydown.reset();
+            if (keydown != -1) {
+                inpComp.keydown.set(keydown);
+            }
+        }
+    }
+
     return true;
 }
 
