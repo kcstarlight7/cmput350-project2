@@ -34,6 +34,7 @@ public:
             if (entityManager.template HasComponent<SpriteComponent>(currentID) &&
                 entityManager.template HasComponent<LocationComponent>(currentID)) {
                 Point2D loc = entityManager.template GetComponent<LocationComponent>(currentID).loc;
+                Point2D drawingLoc;
                 SpriteComponent spriteData =
                     entityManager.template GetComponent<SpriteComponent>(currentID);
                 
@@ -42,12 +43,14 @@ public:
                 if (spriteData.worldSpace) {
                     sprite.setPosition({loc.x - windowManager.GetWorldCenter().x,
                                         loc.y - windowManager.GetWorldCenter().y});
+                    drawingLoc = Point2D(loc.x - windowManager.GetWorldCenter().x,
+                                         loc.y - windowManager.GetWorldCenter().y);
                 } else {
                     sprite.setPosition({loc.x, loc.y});
+                    drawingLoc = Point2D(loc.x, loc.y);
                 }
                 windowManager.GetWindow()->draw(sprite);
-                windowManager.DebugFrameRect(
-                    Rect(loc, sprite.getGlobalBounds().size.x, sprite.getGlobalBounds().size.y), 0, 0, 255);
+                windowManager.DebugFrameRect(Rect(drawingLoc, spriteData.bounds.width, spriteData.bounds.height), 0, 0, 255, 150);
             }
         }
 

@@ -132,7 +132,7 @@ static void LoadMap(Engine& engine, const std::string& path, const std::string& 
 
                     ECSEngine::SpriteComponent spriteComponent;
                     spriteComponent.textureID = spriteid;
-                    spriteComponent.bounds = {tileWidth, tileHeight};
+                    spriteComponent.bounds = ECSEngine::Rect(ECSEngine::Point2D(0,0), tileWidth, tileHeight);
                     spriteComponent.worldSpace = true;
                     
                     engine.GetEntityManager().AddComponent<ECSEngine::SpriteComponent>(
@@ -201,7 +201,7 @@ int main(int argc, char* argv[]) {
     pSpriteComp.textureID = engine.GetSpriteManager().RegisterTexture(
         gResourcePath + "spritesheet-characters-default.png",
         ECSEngine::Rect(ECSEngine::Point2D(128 * 0, 128 * 5), 128, 128));
-    pSpriteComp.bounds = {128, 128};
+    pSpriteComp.bounds = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 128, 128);
     pSpriteComp.worldSpace = true;
 
 
@@ -290,19 +290,19 @@ int main(int argc, char* argv[]) {
 
     ECSEngine::SpriteComponent scoreSpriteComp1;
     scoreSpriteComp1.textureID = scoreComp.digitTextureID[0];
-    scoreSpriteComp1.bounds = {64, 64};
+    scoreSpriteComp1.bounds = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 64, 64);
     scoreSpriteComp1.worldSpace = false;
     engine.GetEntityManager().AddComponent(score1, scoreSpriteComp1);
 
     ECSEngine::SpriteComponent scoreSpriteComp2;
     scoreSpriteComp2.textureID = scoreComp.digitTextureID[0];
-    scoreSpriteComp2.bounds = {64, 64};
+    scoreSpriteComp2.bounds = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 64, 64);
     scoreSpriteComp2.worldSpace = false;
     engine.GetEntityManager().AddComponent(score2, scoreSpriteComp2);
 
     ECSEngine::SpriteComponent scoreSpriteComp3;
     scoreSpriteComp3.textureID = scoreComp.digitTextureID[0];
-    scoreSpriteComp3.bounds = {64, 64};
+    scoreSpriteComp3.bounds = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 64, 64);
     scoreSpriteComp3.worldSpace = false;
     engine.GetEntityManager().AddComponent(score3, scoreSpriteComp3);
 
