@@ -20,7 +20,7 @@ public:
             auto currentID = iterator->GetID();
             if (entityManager.template HasComponent<GravityComponent>(currentID) &&
                 entityManager.template HasComponent<CollisionComponent>(currentID) &&
-                entityManager.template HasComponent<LocationComponent>(currentID)) {
+                entityManager.template HasComponent<MovementComponent>(currentID)) {
                 GravityComponent& gravityComp =
                     entityManager.template GetComponent<GravityComponent>(currentID);
                 if (gravityComp.disabledTimer) {
@@ -30,11 +30,12 @@ public:
 
                 CollisionComponent& collisionComp =
                     entityManager.template GetComponent<CollisionComponent>(currentID);
-                LocationComponent& locationComp =
-                    entityManager.template GetComponent<LocationComponent>(currentID);
+                MovementComponent& movementComp =
+                    entityManager.template GetComponent<MovementComponent>(currentID);
 
                 if (collisionComp.onGround) {  // does not fall if on ground
-                   gravityComp.acceleration = {0.0f, 0.0f};
+                    gravityComp.acceleration = {0.0f, 0.0f};
+                    movementComp.velocity.y = 0;
                 } else {
                     gravityComp.acceleration.y -= kGravity;
                 }
@@ -42,7 +43,7 @@ public:
                     gravityComp.acceleration.y -= kGravityWall;
                 }
 
-                locationComp.loc += gravityComp.acceleration;
+                movementComp.velocity += gravityComp.acceleration;
             }
         }
 
