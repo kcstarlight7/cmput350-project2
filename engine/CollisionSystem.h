@@ -76,15 +76,30 @@ public:
                             }
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height >
                                   otherIDCollisionBox.topLeft.y) {
-                                curIDCollisionComp.onGround = 1;
 
-                                if (curIDPrevCollisionBox.topLeft.y < curIDCollisionBox.topLeft.y) {
-                                    if (otherIDCollisionComp.staticEntity) {
-                                        curIDLocationComp.loc.y -=
-                                            curIDLocationComp.loc.y + curIDCollisionBox.height -
-                                            otherIDCollisionBox.topLeft.y - 1;
-                                    }
-                                } 
+                                if (curIDCollisionBox.topLeft.x > otherIDCollisionBox.topLeft.x &&
+                                    curIDCollisionBox.topLeft.x <
+                                        otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width) {
+                                    
+                                }
+
+                                if (otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width / 2 > curIDCollisionBox.topLeft.x &&
+                                    otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width / 2 <
+                                        (curIDCollisionBox.topLeft.x + curIDCollisionBox.width)) {
+                                    curIDCollisionComp.onGround = 1;
+
+                                    if (curIDPrevCollisionBox.topLeft.y <
+                                        curIDCollisionBox.topLeft.y) {
+                                        if (otherIDCollisionComp.staticEntity) {
+                                            curIDLocationComp.loc.y -=
+                                                curIDLocationComp.loc.y +
+                                                curIDCollisionBox.height -
+                                                otherIDCollisionBox.topLeft.y - 1;
+                                        }
+                                    } 
+                                }
+
+
                             }
                             
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height > otherIDCollisionBox.topLeft.y + otherIDCollisionBox.height) { // if at level with other
