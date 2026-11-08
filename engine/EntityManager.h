@@ -43,6 +43,8 @@ public:
         mFreeEntities.push_back(entity);
     }
 
+    std::string& GetEntityType(EntityID entity) { return mEntities[entity].mType; }
+
     template <typename T>
     void AddComponent(EntityID entity, T component) {
         auto& storage = GetComponentStorage<T>(); //get storage of this component type

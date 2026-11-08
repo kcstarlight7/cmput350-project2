@@ -36,6 +36,9 @@ public:
                 if (collisionComp.onGround) {  // does not fall if on ground
                     gravityComp.acceleration = {0.0f, 0.0f};
                     movementComp.velocity.y = 0;
+                    if (entityManager.GetEntityType(currentID) == "Star") {
+                        movementComp.velocity.x = 0;
+                    }
                 } else {
                     gravityComp.acceleration.y -= kGravity;
                 }

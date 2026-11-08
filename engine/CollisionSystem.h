@@ -39,7 +39,7 @@ public:
                 Rect curIDCollisionBox = curIDCollisionComp.collisionBox;
                 curIDCollisionBox.topLeft += curIDLocationComp.loc;
 
-                std::cout << curIDCollisionBox.topLeft << "\n";
+                //std::cout << curIDCollisionBox.topLeft << "\n";
 
 
                 for (auto iterator2 = entityManager.cbegin(); iterator2 != entityManager.cend();
