@@ -120,18 +120,16 @@ public:
                                                                     otherIDCollisionBox.width);
                                     }
                                 }
-
-                                if (entityManager.GetEntityType(currentID) == "player" &&
-                                    entityManager.GetEntityType(otherID) == "Star") {
-                                    entityManager.template GetComponent<ScoreComponent>(currentID)
-                                        .score += 10;
-                                    entityManager.RemoveEntity(otherID);
-                                    engine->GetSoundManager().GetSound("sfx_gem").play();
-                                }
                             }
                             
                             
-                            
+                            if (entityManager.GetEntityType(currentID) == "player" &&
+                                entityManager.GetEntityType(otherID) == "Star") {
+                                entityManager.template GetComponent<ScoreComponent>(currentID)
+                                    .score += 10;
+                                entityManager.RemoveEntity(otherID);
+                                engine->GetSoundManager().GetSound("sfx_gem").play();
+                            }
                             /* to be implemented when jump works
                             if (curIDCollisionBox.topLeft.y <
                                     otherIDCollisionBox.topLeft.y + otherIDCollisionBox.height &&
