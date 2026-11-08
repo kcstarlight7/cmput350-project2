@@ -200,8 +200,8 @@ int main(int argc, char* argv[]) {
     ECSEngine::SpriteComponent pSpriteComp;
     pSpriteComp.textureID = engine.GetSpriteManager().RegisterTexture(
         gResourcePath + "spritesheet-characters-default.png",
-        ECSEngine::Rect(ECSEngine::Point2D(128 * 0, 128 * 5), 128, 128));
-    pSpriteComp.bounds = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 128, 128);
+        ECSEngine::Rect(ECSEngine::Point2D(25, 670), 78, 98));
+    pSpriteComp.bounds = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 78, 98);
     pSpriteComp.worldSpace = true;
 
 
