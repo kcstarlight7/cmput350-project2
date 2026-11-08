@@ -90,7 +90,8 @@ template <typename... Components>
 bool ECSEngine<Components...>::ProcessEvents() {
     // process events from sfml and updating input component
 
-    int keydown = -1;
+    std::bitset<sf::Keyboard::ScancodeCount> keydowns{};
+    std::bitset<sf::Keyboard::ScancodeCount> keyups{};
 
     while (const std::optional event = mWindowManager.GetWindow()->pollEvent()) {
         if (event->is<sf::Event::Closed>()) {
@@ -98,12 +99,18 @@ bool ECSEngine<Components...>::ProcessEvents() {
             mWindowManager.GetWindow()->close();
         } 
 
-        
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-            keydown = (int)keyPressed->scancode;
+            keydowns.set((int)keyPressed->scancode);
+        }
+
+        if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>()) {
+            keyups.set((int)keyReleased->scancode);
         }
     }
 
+    //std::cout << keydowns << std::endl;
+
+    
     auto& entityManager = GetEntityManager();
     for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend(); ++iterator) {
         // loops through all entities
@@ -113,9 +120,11 @@ bool ECSEngine<Components...>::ProcessEvents() {
                 entityManager.template GetComponent<InputComponent>(currentID);
 
             inpComp.lastKeydown = inpComp.keydown;
-            inpComp.keydown.reset();
-            if (keydown != -1) {
-                inpComp.keydown.set(keydown);
+            inpComp.keydown |= keydowns;
+            for (unsigned int i = 0; i < sf::Keyboard::ScancodeCount; i++) {
+                if (inpComp.keydown.test(i) == keyups.test(i)) {
+                    inpComp.keydown.reset(i);
+                }
             }
         }
     }
