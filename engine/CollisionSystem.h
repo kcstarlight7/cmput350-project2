@@ -14,6 +14,7 @@ public:
 
     tSystemReturn Run(EngineView<Components...>* engine) override { 
         EntityManager<Components...>& entityManager = engine->GetEntityManager();
+        WindowManager& windowManager = engine->GetWindowManager();
 
         for (auto iterator1 = entityManager.cbegin(); iterator1 != entityManager.cend(); ++iterator1) {
             // loops through all entities
@@ -37,6 +38,7 @@ public:
                     entityManager.template GetComponent<LocationComponent>(currentID);
 
                 Rect curIDCollisionBox = curIDCollisionComp.collisionBox;
+                Rect curIDPrevCollisionBox = curIDCollisionComp.previousCollisionBox;
                 curIDCollisionBox.topLeft += curIDLocationComp.loc;
 
                 std::cout << curIDCollisionBox.topLeft << "\n";
@@ -67,25 +69,62 @@ public:
 
                         bool collide = ComputeCollision(curIDCollisionBox, otherIDCollisionBox);
                         if (collide) {
-                            if (curIDCollisionBox.topLeft.y > otherIDCollisionBox.topLeft.y &&
-                                !curIDCollisionComp.onGround) {
+                            if (curIDPrevCollisionBox.topLeft.y < curIDCollisionBox.topLeft.y) {
                                 curIDCollisionComp.onGround = 1;
-                            }
 
-                            if (curIDCollisionBox.topLeft.x < otherIDCollisionBox.topLeft.x &&
-                                !curIDCollisionComp.onLeftWall && !curIDCollisionComp.onGround) {
-                                curIDCollisionComp.onLeftWall = 1;
-                            }
+                                curIDLocationComp.loc.y -= curIDLocationComp.loc.y +
+                                                           curIDCollisionBox.height -
+                                                           otherIDCollisionBox.topLeft.y - 1;
+                            } 
+                            if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height - 2 > otherIDCollisionBox.topLeft.y) { // if at level with other
+                                if (curIDPrevCollisionBox.topLeft.x <
+                                         curIDCollisionBox.topLeft.x) {
+                                    curIDCollisionComp.onRightWall = 1;
 
-                            if (curIDCollisionBox.topLeft.y < otherIDCollisionBox.topLeft.y &&
+                                    curIDLocationComp.loc.x -= curIDLocationComp.loc.x +
+                                                               curIDCollisionBox.width -
+                                                               otherIDCollisionBox.topLeft.x;
+                                }
+                                
+                                if (curIDPrevCollisionBox.topLeft.x > curIDCollisionBox.topLeft.x) {
+                                    curIDCollisionComp.onLeftWall = 1;
+
+                                    curIDLocationComp.loc.x -=
+                                        curIDLocationComp.loc.x -
+                                        (otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width);
+                                }
+                            }
+                            
+                            
+                            
+                            /* to be implemented when jump works
+                            if (curIDCollisionBox.topLeft.y <
+                                    otherIDCollisionBox.topLeft.y + otherIDCollisionBox.height &&
                                 !curIDCollisionComp.onCeiling) {
-                                curIDCollisionComp.onCeiling = 1;
-                            }
+                                // curIDCollisionComp.onCeiling = 1;
+                            }*/ 
 
-                            if (curIDCollisionBox.topLeft.x > otherIDCollisionBox.topLeft.x &&
-                                !curIDCollisionComp.onRightWall && !curIDCollisionComp.onGround) {
-                                curIDCollisionComp.onRightWall = 1;
-                            }
+                            
+
+
+                           
+
+                        }
+
+                        // draw red rect
+                        if (collide) {
+                            Point2D curIDDrawLoc =
+                                windowManager.WorldToWindow(curIDLocationComp.loc);
+                            Point2D otherIDDrawLoc =
+                                windowManager.WorldToWindow(otherIDLocationComp.loc);
+                            windowManager.DebugFrameRect(
+                                Rect(curIDDrawLoc, curIDCollisionComp.collisionBox.width,
+                                     curIDCollisionComp.collisionBox.height),
+                                255, 0, 0, 255);
+                            windowManager.DebugFrameRect(
+                                Rect(otherIDDrawLoc, otherIDCollisionComp.collisionBox.width,
+                                     otherIDCollisionComp.collisionBox.height),
+                                0, 255, 255, 255);
                         }
 
                         /*

@@ -49,8 +49,9 @@ public:
                     sprite.setPosition({loc.x, loc.y});
                     drawingLoc = Point2D(loc.x, loc.y);
                 }
+                //sprite.setColor(sf::Color(255, 255, 255, 64));
                 windowManager.GetWindow()->draw(sprite);
-                windowManager.DebugFrameRect(Rect(drawingLoc, spriteData.bounds.width, spriteData.bounds.height), 0, 0, 255, 150);
+                //windowManager.DebugFrameRect(Rect(drawingLoc, spriteData.bounds.width, spriteData.bounds.height), 0, 0, 255, 150);
             }
         }
 

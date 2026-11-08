@@ -206,7 +206,7 @@ int main(int argc, char* argv[]) {
 
 
     ECSEngine::CollisionComponent pCollisionComp;
-    pCollisionComp.collisionBox = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 128, 128);
+    pCollisionComp.collisionBox = ECSEngine::Rect(ECSEngine::Point2D(0, 0), 78, 98);
     pCollisionComp.onCeiling = 0;
     pCollisionComp.onGround = 0;
     pCollisionComp.onLeftWall = 0;

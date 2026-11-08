@@ -2,7 +2,7 @@
 
 namespace ECSEngine {
 
-const float kGravity = -1.0f; // TODO: fine tune in testing
+const float kGravity = -0.098f; // TODO: fine tune in testing
 const float kGravityWall = -0.5f; // TODO: ^
 
 template <typename... Components>
