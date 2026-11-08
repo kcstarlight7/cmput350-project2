@@ -2,6 +2,7 @@
 
 #include "EntityManager.h"
 #include "ScoreComponent.h"
+#include <cmath>
 
 namespace ECSEngine {
 
@@ -70,22 +71,20 @@ public:
 
                         bool collide = ComputeCollision(curIDCollisionBox, otherIDCollisionBox);
                         if (collide) {
+
                             if (entityManager.GetEntityType(currentID) == "player" && entityManager.GetEntityType(otherID) == "Star") {
                                 entityManager.template GetComponent<ScoreComponent>(currentID).score += 10;
                                 entityManager.RemoveEntity(otherID);
                             }
+
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height >
                                   otherIDCollisionBox.topLeft.y) {
+                                float curBoxMidpt =
+                                    curIDCollisionBox.topLeft.x + curIDCollisionBox.width / 2;
+                                float otherBoxMidpt =
+                                    otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width / 2;
 
-                                if (curIDCollisionBox.topLeft.x > otherIDCollisionBox.topLeft.x &&
-                                    curIDCollisionBox.topLeft.x <
-                                        otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width) {
-                                    
-                                }
-
-                                if (otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width / 2 > curIDCollisionBox.topLeft.x &&
-                                    otherIDCollisionBox.topLeft.x + otherIDCollisionBox.width / 2 <
-                                        (curIDCollisionBox.topLeft.x + curIDCollisionBox.width)) {
+                                if (std::abs(otherBoxMidpt - curBoxMidpt) < otherIDCollisionBox.width * 0.8f) {
                                     curIDCollisionComp.onGround = 1;
 
                                     if (curIDPrevCollisionBox.topLeft.y <
@@ -98,8 +97,6 @@ public:
                                         }
                                     } 
                                 }
-
-
                             }
                             
                             if (curIDCollisionBox.topLeft.y + curIDCollisionBox.height > otherIDCollisionBox.topLeft.y + otherIDCollisionBox.height) { // if at level with other
@@ -112,10 +109,6 @@ public:
                                                                    curIDCollisionBox.width -
                                                                    otherIDCollisionBox.topLeft.x;
                                     }
-
-                                    if (curIDCollisionComp.onGround == 0) {
-                                        engine->GetSoundManager().GetSound("error").play();
-                                    }
                                 }
                                 
                                 if (curIDPrevCollisionBox.topLeft.x > curIDCollisionBox.topLeft.x) {
@@ -126,10 +119,14 @@ public:
                                                                    (otherIDCollisionBox.topLeft.x +
                                                                     otherIDCollisionBox.width);
                                     }
-                                    
-                                    if (curIDCollisionComp.onGround == 0) {
-                                        engine->GetSoundManager().GetSound("error").play();
-                                    }
+                                }
+
+                                if (entityManager.GetEntityType(currentID) == "player" &&
+                                    entityManager.GetEntityType(otherID) == "Star") {
+                                    entityManager.template GetComponent<ScoreComponent>(currentID)
+                                        .score += 10;
+                                    entityManager.RemoveEntity(otherID);
+                                    engine->GetSoundManager().GetSound("sfx_gem").play();
                                 }
                             }
                             
@@ -141,23 +138,6 @@ public:
                                 !curIDCollisionComp.onCeiling) {
                                 // curIDCollisionComp.onCeiling = 1;
                             }*/ 
-
-                            
-
-
-                           
-                            if (entityManager.GetEntityType(currentID) == "player" &&
-                                entityManager.GetEntityType(otherID) == "Star") {
-                                entityManager.template GetComponent<ScoreComponent>(currentID)
-                                    .score += 10;
-                                entityManager.RemoveEntity(otherID);
-                                engine->GetSoundManager().GetSound("sfx_gem").play();
-                            }
-                            if (entityManager.GetEntityType(currentID) == "player" &&
-                                entityManager.GetEntityType(otherID) == "Wall" &&
-                                curIDCollisionComp.onGround == 0) {
-                                engine->GetSoundManager().GetSound("error").play();
-                            }
                         }
 
                         // draw red rect
@@ -195,6 +175,12 @@ public:
                             ent1Location.loc.x = ent1.previousCollisionBox.topLeft.x;
                         }*/
                     }
+                }
+
+
+                if (entityManager.GetEntityType(currentID) == "player" &&
+                    (curIDCollisionComp.onLeftWall || curIDCollisionComp.onRightWall) && !curIDCollisionComp.onGround) {
+                    engine->GetSoundManager().GetSound("error").play();
                 }
             }
         }
