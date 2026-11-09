@@ -46,6 +46,7 @@ public:
                     if (collisionComp.onLeftWall || collisionComp.onRightWall) {  // case wall jumping
                         movementComp.velocity.y = 0;
                         gravityComp.acceleration.y -= kGravityWall;
+                        gravityComp.acceleration.x = 0;
                     } else {
                         gravityComp.acceleration.y -= kGravity;
                     }
