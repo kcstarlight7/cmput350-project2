@@ -74,6 +74,13 @@ public:
 
                         bool collide = ComputeCollision(curIDCollisionBox, otherIDCollisionBox);
                         if (collide) {
+                            if (entityManager.GetEntityType(currentID) == "player" &&
+                                entityManager.GetEntityType(otherID) == "Spike") {
+                                if (entityManager.template HasComponent<RespawnComponent>(
+                                        currentID)) {
+                                    curIDLocationComp.loc = entityManager.template GetComponent<RespawnComponent>(currentID).loc;
+                                }
+                            }
                             if (entityManager.GetEntityType(currentID) == "player" && entityManager.GetEntityType(otherID) == "Star") {
                                 entityManager.template GetComponent<ScoreComponent>(currentID).score += 10;
                                 entityManager.RemoveEntity(otherID);
@@ -89,11 +96,7 @@ public:
                                 if (std::abs(otherBoxMidpt - curBoxMidpt) < otherIDCollisionBox.width * 0.8f) {
                                     
                                     curIDCollisionComp.onGround = 1;
-                                    if ((entityManager.template GetComponent<MovementComponent>(currentID).jumpCount > 0 
-                                        || soundTrigger) &&
-                                        entityManager.GetEntityType(currentID) == "player") {
-                                        engine->GetSoundManager().GetSound("snow_footstep").play();
-                                    }
+                                    
                                     
                                     entityManager.template GetComponent<MovementComponent>(currentID)
                                         .jumpCount = 0;
@@ -168,6 +171,10 @@ public:
                                     curIDCollisionComp.onCeiling) {
                                     camShakeComp.frameLimit = 15;
                                     camShakeComp.offset.y = 3.f;
+
+                                    if (curIDCollisionComp.onGround) {
+                                        engine->GetSoundManager().GetSound("snow_footstep").play();
+                                    }
                                 } else if (std::abs(curIDCollisionBox.topLeft.x - curIDPrevCollisionBox.topLeft.x) > 10 && 
                                     entityManager.GetEntityType(otherID) == "Wall") {
                                     camShakeComp.frameLimit = 15;

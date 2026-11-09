@@ -23,16 +23,7 @@ public:
                 int frames = engine->GetWindowManager().framesPerSecond;
                 currentLoc += velocity;
 
-                Point2D currentLocWindow = engine->GetWindowManager().WorldToWindow(currentLoc);
-                Point2D windowSize(engine->GetWindowManager().GetWindowBounds().width,
-                                   engine->GetWindowManager().GetWindowBounds().height);
-                if (entityManager.template HasComponent<RespawnComponent>(currentID)) {
-                    if (currentLocWindow.x < 0 || currentLocWindow.y < 0 ||
-                        currentLocWindow.x > windowSize.x || currentLocWindow.y > windowSize.y) {
-                        currentLoc =
-                            entityManager.template GetComponent<RespawnComponent>(currentID).loc;
-                    }
-                }
+                
             }
         }
         return kContinue; 
