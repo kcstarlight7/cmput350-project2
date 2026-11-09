@@ -44,18 +44,18 @@ public:
                                     .velocity;
                             entityManager.template GetComponent<MovementComponent>(currentID)
                                 .velocity.x =
-                                currentVelocity.x + 0.8 * ((-kMaxRunVelocity) - currentVelocity.x);
+                                currentVelocity.x + 0.025 * ((-kMaxRunVelocity) - currentVelocity.x);
                             entityManager.template GetComponent<GravityComponent>(currentID)
                                 .disabledTimer =
                                 30;
-                            return kContinue;
+                            //return kContinue;
                         }
                         Point2D currentVelocity = 
                             entityManager.template GetComponent<MovementComponent>(currentID)
                                 .velocity;
                         entityManager.template GetComponent<MovementComponent>(currentID)
                             .velocity.x =
-                            currentVelocity.x + 0.8 * ((-kMaxRunVelocity) - currentVelocity.x);
+                            currentVelocity.x + 0.025 * ((-kMaxRunVelocity) - currentVelocity.x);
                     }
                 } else if (inputComp.keydown[Key::Right]) {
                     //move right
@@ -68,19 +68,19 @@ public:
                                     .velocity;
                             entityManager.template GetComponent<MovementComponent>(currentID)
                                 .velocity.x =
-                                currentVelocity.x + 0.8 * (kDashVelocity - currentVelocity.x);
+                                currentVelocity.x + 0.025 * (kDashVelocity - currentVelocity.x);
                             entityManager.template GetComponent<GravityComponent>(currentID)
                                 .disabledTimer =
                                 30;
-                            return kContinue;
+                            //return kContinue;
                         }
                         Point2D currentVelocity =
                             entityManager.template GetComponent<MovementComponent>(currentID)
                                 .velocity;
                         entityManager.template GetComponent<MovementComponent>(currentID)
                             .velocity.x =
-                            currentVelocity.x + 0.8 * (kMaxRunVelocity - currentVelocity.x);
-                        return kContinue;
+                            currentVelocity.x + 0.025 * (kMaxRunVelocity - currentVelocity.x);
+                        //return kContinue;
                     }
                 } else {
                     if (entityManager.template HasComponent<MovementComponent>(currentID)) {
@@ -88,7 +88,7 @@ public:
                             entityManager.template GetComponent<MovementComponent>(currentID)
                                 .velocity;
                         entityManager.template GetComponent<MovementComponent>(currentID)
-                            .velocity.x = 0;
+                            .velocity.x = currentVelocity.x + 0.25 * (0 - currentVelocity.x);
                     }
                 }
 
