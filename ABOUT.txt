@@ -1,0 +1,45 @@
+Implementation: 
+Nothing of note was changed or deviated from the project description and requirements. 
+The game loads the world from the provided .map files, and the player character is controlled with left/right arrow keys, Z (for jump), and C (for dash) after spawning. 
+If player character touches any of the spikes, it is treated as a "death," and player character is spawned back to the initial location. 
+Sound effects were added for low/high jumps, landing, star collection, and wall push while falling. 
+Low/high jumps are also implemented via length of Z key being held, and a cap on player's possible height. 
+Spawner is also implemented, with a cap of 5 spawns with 10 seconds in between. 
+
+The managers all follow a general pattern of acquire resource -> take control of resource -> save it into the corresponding data structure (vector/unordered map).
+With this implementation, the reference that is returned by any get-related methods will not be out of scope until the manager itself is destructed, which is when game is closed/program is ended. 
+
+In particular, entity manager stores a tuple of component storages (mComponents), a vector of entities (mEntities), a vector of array of size_t used to get the entitys' index within a component storage (mComponentIndices), a vector of size_t indicating which entities are free (mFreeEntities), and a vector of boolean indicating which entities are valid (mEntityValid). 
+When an entity is created, the manager first checks if there are any free entities and replace if there is, otherwise it will add a new entity into mEntities, add an array full of null components to mComponentIndices, and add an entry of true into mEntityValid. 
+If any operations regarding an entity's components need to be done, the manager first gets the component storage of that type, find the corresponding entry in mComponentIndices for that entity and that type of component, and alters the correct entry in that component's storage, whether that is add, remove, or just get/has. 
+
+For sprite manager, registering a texture will check if an entry to mTextures (unordered map) with the resource file path and the sf::Texture exists, add if it does not, and add the sprite to mSprites (vector).
+The sprite to be pushed into mSprites is defined with the source rectangle given when register texture is called. 
+When get sprite is called, it returns a reference to the sf::Sprite object, which then can be drawn.
+
+For sound manager, when a sound is registered, it creates a sound buffer using the path provided, adds it to mSoundBuffers (unordered map) with the name assigned, and adds the corresponding sf::Sound into mSoundInstances (vector). 
+When get sound is called with the name, it returns a reference to the sf::Sound object, which then can be played.
+
+The window manager in particular does not really hold anything besides the shared pointer to the window itself, mainly used to draw. 
+However, during initialization the window manager does set the frame rate of the game. 
+
+The system manager simply runs all systems, in the way they were added with the add system method. This method is always called with a unique pointer, so the system manager maintains reference to all systems.
+
+Contributions: 
+Trung Tran (GitHub: reschan): 
+Completed initial drafts of systems: Camera, Collision, Gravity, Sprite.
+Accomplished overall game performance optimization. 
+Did initialization of player components.
+Completed camera shake and exclusion zones. 
+Refined sprite manager, system manager, collision system.
+Completed final player movement settings/constants.
+
+Kasey Chuang (GitHub: kcstarlight7): 
+Completed initial drafts of managers: Entity, Sound, Sprite, Window, System. 
+Completed initial drafts of systems: Input, Movement, Score, Spawn.
+Did map loading from file. 
+Refined spawn system, input system, sound manager, score system, movement system.
+Added sounds and related checks for playing at the intended events. 
+
+Code Support: 
+No AI was used in the making of this project. 
