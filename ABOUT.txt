@@ -23,7 +23,7 @@ When get sound is called with the name, it returns a reference to the sf::Sound 
 The window manager in particular does not really hold anything besides the shared pointer to the window itself, mainly used to draw. 
 However, during initialization the window manager does set the frame rate of the game. 
 
-The system manager simply runs all systems, in the way they were added with the add system method. This method is always called with a unique pointer, so the system manager maintains reference to all systems.
+The system manager simply runs all systems, in the way they were added with the add system method. This method is always called with a unique pointer, so the system manager maintains reference to all systems throughout the game's lifespan.
 
 Contributions: 
 Restia Tran (GitHub: reschan): 
