@@ -50,10 +50,12 @@ public:
                         gravityComp.acceleration.y -= kGravity;
                     }
                 }
-                
 
+                if (collisionComp.onCeiling) {
+                    movementComp.velocity.y = 0;
+                    gravityComp.acceleration.y -= kGravity;
+                }
                 
-
                 movementComp.velocity += gravityComp.acceleration;
             }
         }

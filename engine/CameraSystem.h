@@ -28,6 +28,7 @@ public:
 
         Point2D *camPos = nullptr;
         SpriteComponent spriteComp;
+        CameraShake *camShakeComp;
 
         for (auto iterator = entityManager.cbegin(); iterator != entityManager.cend();
              ++iterator) {
@@ -38,6 +39,7 @@ public:
                 camPos = &entityManager.template GetComponent<LocationComponent>(currentID).loc;
 
                 spriteComp = entityManager.template GetComponent<SpriteComponent>(currentID);
+                camShakeComp = &entityManager.template GetComponent<CameraShake>(currentID);
             }
 
         }
@@ -49,7 +51,19 @@ public:
                 CameraComponent& camComp =
                     entityManager.template GetComponent<CameraComponent>(currentID);
 
+                Point2D shakeOffset(0.f, 0.f);
+
                 if (camPos != nullptr) {
+                    if (camShakeComp->frameLimit) {
+                        camShakeComp->frameLimit -= 1;
+                        std::cout << camShakeComp->frameLimit << std::endl;
+                        if (camShakeComp->frameLimit % 2 == 1) {
+                            shakeOffset = camShakeComp->offset;
+                        } else {
+                            shakeOffset = camShakeComp->offset * -1;
+                        }
+                    }
+
                     Point2D entityPtWorld = *camPos + spriteComp.bounds.width / 2;  // world
                     Point2D entityPtWindow = windowManager.WorldToWindow(entityPtWorld);
 
@@ -84,9 +98,7 @@ public:
                 
                 windowManager.SetWorldScale(camComp.worldUnitsPerPixel);
                 windowManager.SetCamera(Point2D(camComp.position.x, 0.f),
-                    Point2D(screenPos.x, 0.f));
-                
-
+                                        Point2D(screenPos.x + shakeOffset.x, 0.f + shakeOffset.y));
             }
         }
 
