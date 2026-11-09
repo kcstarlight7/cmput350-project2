@@ -5,7 +5,7 @@
 namespace ECSEngine {
 
 const float kMaxRunVelocity = 15;
-const float kDashVelocity = 50;
+const float kDashVelocity = 30;
 const float kJumpVelocity = 1.5;
 const float kGroundRunAcceleration = 5;
 const float kAirRunAcceleration = 4;
@@ -29,51 +29,49 @@ public:
             if (entityManager.template HasComponent<InputComponent>(currentID)) {
                 //if entity has input component
                 //std::cout << "has input" << "\n";
-                InputComponent& inputComp = entityManager.template GetComponent<InputComponent>(currentID);
-                bool currentDisabled =
-                    (entityManager.template GetComponent<GravityComponent>(currentID).disabledTimer == 0);
+                InputComponent& inputComp =
+                    entityManager.template GetComponent<InputComponent>(currentID);
+                GravityComponent& gravComp = 
+                    entityManager.template GetComponent<GravityComponent>(currentID);
+                Point2D currentVelocity =
+                    entityManager.template GetComponent<MovementComponent>(currentID).velocity;
+                if (inputComp.lastDash != 0 &&
+                    inputComp.lastDash < engine->GetWindowManager().framesPerSecond) {
+                    inputComp.lastDash++;
+                    if (gravComp.acceleration.x < 0) {
+                        gravComp.acceleration.x += 0.2 * (-kDashVelocity - currentVelocity.x);
+                    } else {
+                        gravComp.acceleration.x += 0.2 * (kDashVelocity - currentVelocity.x);
+                    }
+                } else if (inputComp.lastDash >= engine->GetWindowManager().framesPerSecond) {
+                    inputComp.lastDash = 0;
+                }
                 //std::cout << inputComp.keydown.any() << "\n";
                 if (inputComp.keydown[Key::Left]) {
                     //move left
                     std::cout << "left" << "\n";
                     if (entityManager.template HasComponent<MovementComponent>(currentID)) {
-                        if (!currentDisabled && inputComp.keydown[Key::C]) {
-                            // dash while moving
-                            Point2D currentVelocity =
-                                entityManager.template GetComponent<MovementComponent>(currentID)
-                                    .velocity;
-                            entityManager.template GetComponent<MovementComponent>(currentID)
-                                .velocity.x =
-                                currentVelocity.x + 0.8 * ((-kMaxRunVelocity) - currentVelocity.x);
-                            entityManager.template GetComponent<GravityComponent>(currentID)
-                                .disabledTimer =
-                                30;
-                            return kContinue;
-                        }
                         Point2D currentVelocity = 
                             entityManager.template GetComponent<MovementComponent>(currentID)
                                 .velocity;
                         entityManager.template GetComponent<MovementComponent>(currentID)
                             .velocity.x =
                             currentVelocity.x + 0.8 * ((-kMaxRunVelocity) - currentVelocity.x);
+                        return kContinue;
+                        if (inputComp.keydown[Key::C]) {
+                            // dash while moving
+                            entityManager.template GetComponent<CollisionComponent>(currentID)
+                                .onGround = 0;
+                            gravComp.acceleration.x += 0.2 * (-kDashVelocity - currentVelocity.x);
+                            inputComp.lastDash++;
+                            return kContinue;
+                        }
                     }
                 } else if (inputComp.keydown[Key::Right]) {
                     //move right
                     std::cout << "right" << "\n";
                     if (entityManager.template HasComponent<MovementComponent>(currentID)) {
-                        if (!currentDisabled && inputComp.keydown[Key::C]) {
-                            // dash while moving
-                            Point2D currentVelocity =
-                                entityManager.template GetComponent<MovementComponent>(currentID)
-                                    .velocity;
-                            entityManager.template GetComponent<MovementComponent>(currentID)
-                                .velocity.x =
-                                currentVelocity.x + 0.8 * (kDashVelocity - currentVelocity.x);
-                            entityManager.template GetComponent<GravityComponent>(currentID)
-                                .disabledTimer =
-                                30;
-                            return kContinue;
-                        }
+                        
                         Point2D currentVelocity =
                             entityManager.template GetComponent<MovementComponent>(currentID)
                                 .velocity;
@@ -81,6 +79,14 @@ public:
                             .velocity.x =
                             currentVelocity.x + 0.8 * (kMaxRunVelocity - currentVelocity.x);
                         return kContinue;
+                        if (inputComp.keydown[Key::C]) {
+                            // dash while moving
+                            entityManager.template GetComponent<CollisionComponent>(currentID)
+                                .onGround = 0;
+                            gravComp.acceleration.x += 0.2 * (kDashVelocity - currentVelocity.x);
+                            inputComp.lastDash++;
+                            return kContinue;
+                        }
                     }
                 } else {
                     if (entityManager.template HasComponent<MovementComponent>(currentID)) {
@@ -134,17 +140,12 @@ public:
                 if (inputComp.keydown[Key::C]) {
                     // dash
                     // default dash forward?
-                    std::cout << "dash" << "\n";
-                    if (!currentDisabled &&
-                        entityManager.template HasComponent<MovementComponent>(currentID)) {
-                        Point2D currentVelocity =
-                            entityManager.template GetComponent<MovementComponent>(currentID)
-                                .velocity;
-                        entityManager.template GetComponent<MovementComponent>(currentID)
-                            .velocity.x =
-                            currentVelocity.x + 0.8 * (kDashVelocity - currentVelocity.x);
-                        entityManager.template GetComponent<GravityComponent>(currentID)
-                            .disabledTimer = 30;
+                    if (inputComp.lastDash == 0 && entityManager.template HasComponent<MovementComponent>(currentID)) {
+                        std::cout << "dash" << "\n";
+                        entityManager.template GetComponent<CollisionComponent>(currentID)
+                            .onGround = 0;
+                        gravComp.acceleration.x += 0.2 * (kDashVelocity - currentVelocity.x);
+                        inputComp.lastDash++;
                         return kContinue;
                     }
                 }
