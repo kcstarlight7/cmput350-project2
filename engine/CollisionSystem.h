@@ -74,13 +74,7 @@ public:
 
                         bool collide = ComputeCollision(curIDCollisionBox, otherIDCollisionBox);
                         if (collide) {
-                            if (entityManager.GetEntityType(currentID) == "player" &&
-                                entityManager.GetEntityType(otherID) == "Spike") {
-                                if (entityManager.template HasComponent<RespawnComponent>(
-                                        currentID)) {
-                                    curIDLocationComp.loc = entityManager.template GetComponent<RespawnComponent>(currentID).loc;
-                                }
-                            }
+
                             if (entityManager.GetEntityType(currentID) == "player" && entityManager.GetEntityType(otherID) == "Star") {
                                 entityManager.template GetComponent<ScoreComponent>(currentID).score += 10;
                                 entityManager.RemoveEntity(otherID);
@@ -179,6 +173,21 @@ public:
                                     entityManager.GetEntityType(otherID) == "Wall") {
                                     camShakeComp.frameLimit = 15;
                                     camShakeComp.offset.x = 3.f;
+                                }
+                            }
+
+                            if (entityManager.GetEntityType(currentID) == "player" &&
+                                entityManager.GetEntityType(otherID) == "Spike") {
+                                if (entityManager.template HasComponent<RespawnComponent>(
+                                        currentID)) {
+                                    curIDLocationComp.loc =
+                                        entityManager
+                                            .template GetComponent<RespawnComponent>(currentID)
+                                            .loc +
+                                        Point2D(0.f, 50.f);
+                                    entityManager
+                                        .template GetComponent<MovementComponent>(currentID)
+                                        .velocity = {0.f, 0.f};
                                 }
                             }
                         }
